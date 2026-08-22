@@ -12,8 +12,8 @@ type Post = {
   status: "draft" | "published" | "scheduled";
   featuredImage: string | null;
   isFeatured: boolean;
-  publishedAt: string | null;
-  createdAt: string;
+  publishedAt: Date | null;
+  createdAt: Date;
 };
 
 const statusStyles: Record<string, string> = {
