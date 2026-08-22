@@ -1,10 +1,12 @@
-import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+import { pgTable, text, boolean, timestamp, integer, uuid, pgEnum } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
-export const users = sqliteTable("users", {
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
+// Enums (Postgres-native, replaces the { enum: [...] } pattern)
+export const userRoleEnum = pgEnum("user_role", ["admin", "editor"]);
+export const postStatusEnum = pgEnum("post_status", ["draft", "published", "scheduled"]);
+
+export const users = pgTable("users", {
+  id: uuid("id").primaryKey().defaultRandom(),
 
   name: text("name").notNull(),
 
@@ -12,23 +14,15 @@ export const users = sqliteTable("users", {
 
   password: text("password").notNull(), // bcrypt hash, never plain text
 
-  role: text("role", { enum: ["admin", "editor"] })
-    .notNull()
-    .default("admin"),
+  role: userRoleEnum("role").notNull().default("admin"),
 
-  createdAt: text("created_at")
-    .notNull()
-    .default(sql`(current_timestamp)`),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
 
-  updatedAt: text("updated_at")
-    .notNull()
-    .default(sql`(current_timestamp)`),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
-export const posts = sqliteTable("posts", {
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
+export const posts = pgTable("posts", {
+  id: uuid("id").primaryKey().defaultRandom(),
 
   // Core
   title: text("title").notNull(),
@@ -41,17 +35,15 @@ export const posts = sqliteTable("posts", {
   featuredImageAlt: text("featured_image_alt"),
 
   // Author
-  authorId: text("author_id")
+  authorId: uuid("author_id")
     .notNull()
     .references(() => users.id),
 
   // Publish settings
-  status: text("status", { enum: ["draft", "published", "scheduled"] })
-    .notNull()
-    .default("draft"),
-  publishedAt: text("published_at"),
-  scheduledAt: text("scheduled_at"),
-  isFeatured: integer("is_featured", { mode: "boolean" }).notNull().default(false),
+  status: postStatusEnum("status").notNull().default("draft"),
+  publishedAt: timestamp("published_at"),
+  scheduledAt: timestamp("scheduled_at"),
+  isFeatured: boolean("is_featured").notNull().default(false),
 
   // SEO
   focusKeyphrase: text("focus_keyphrase"),
@@ -76,53 +68,49 @@ export const posts = sqliteTable("posts", {
   schemaType: text("schema_type"), // e.g. "Article", "BlogPosting"
 
   // Advanced
-  noindex: integer("noindex", { mode: "boolean" }).notNull().default(false),
-  nofollow: integer("nofollow", { mode: "boolean" }).notNull().default(false),
+  noindex: boolean("noindex").notNull().default(false),
+  nofollow: boolean("nofollow").notNull().default(false),
   customSchema: text("custom_schema"), // raw JSON-LD override
 
-  createdAt: text("created_at")
-    .notNull()
-    .default(sql`(current_timestamp)`),
-  updatedAt: text("updated_at")
-    .notNull()
-    .default(sql`(current_timestamp)`),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
 // Categories
-export const categories = sqliteTable("categories", {
-  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+export const categories = pgTable("categories", {
+  id: uuid("id").primaryKey().defaultRandom(),
   name: text("name").notNull(),
   slug: text("slug").notNull().unique(),
 });
 
-export const postCategories = sqliteTable("post_categories", {
-  postId: text("post_id").notNull().references(() => posts.id, { onDelete: "cascade" }),
-  categoryId: text("category_id").notNull().references(() => categories.id, { onDelete: "cascade" }),
+export const postCategories = pgTable("post_categories", {
+  postId: uuid("post_id").notNull().references(() => posts.id, { onDelete: "cascade" }),
+  categoryId: uuid("category_id").notNull().references(() => categories.id, { onDelete: "cascade" }),
 });
 
 // Tags
-export const tags = sqliteTable("tags", {
-  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+export const tags = pgTable("tags", {
+  id: uuid("id").primaryKey().defaultRandom(),
   name: text("name").notNull(),
   slug: text("slug").notNull().unique(),
 });
 
-export const postTags = sqliteTable("post_tags", {
-  postId: text("post_id").notNull().references(() => posts.id, { onDelete: "cascade" }),
-  tagId: text("tag_id").notNull().references(() => tags.id, { onDelete: "cascade" }),
+export const postTags = pgTable("post_tags", {
+  postId: uuid("post_id").notNull().references(() => posts.id, { onDelete: "cascade" }),
+  tagId: uuid("tag_id").notNull().references(() => tags.id, { onDelete: "cascade" }),
 });
 
 // FAQs (belongs to one post)
-export const faqs = sqliteTable("faqs", {
-  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
-  postId: text("post_id").notNull().references(() => posts.id, { onDelete: "cascade" }),
+export const faqs = pgTable("faqs", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  postId: uuid("post_id").notNull().references(() => posts.id, { onDelete: "cascade" }),
   question: text("question").notNull(),
   answer: text("answer").notNull(),
   order: integer("order").notNull().default(0),
 });
 
 // Related posts (self-referencing many-to-many)
-export const relatedPosts = sqliteTable("related_posts", {
-  postId: text("post_id").notNull().references(() => posts.id, { onDelete: "cascade" }),
-  relatedPostId: text("related_post_id").notNull().references(() => posts.id, { onDelete: "cascade" }),
+export const relatedPosts = pgTable("related_posts", {
+  postId: uuid("post_id").notNull().references(() => posts.id, { onDelete: "cascade" }),
+  relatedPostId: uuid("related_post_id").notNull().references(() => posts.id, { onDelete: "cascade" }),
 });
