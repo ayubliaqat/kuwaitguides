@@ -62,7 +62,9 @@ export default function PostEditor({
   const [status, setStatus] = useState<"draft" | "published" | "scheduled">(
     (initialData?.status as "draft" | "published" | "scheduled") || "draft",
   );
-  const [publishedAt] = useState((initialData?.publishedAt as string) || "");
+  const [publishedAt, setPublishedAt] = useState(
+    (initialData?.publishedAt as string) || "",
+  );
   const [scheduledAt, setScheduledAt] = useState(
     (initialData?.scheduledAt as string) || "",
   );
@@ -227,8 +229,33 @@ export default function PostEditor({
     content,
   });
 
-  async function handleSave(saveStatus: "draft" | "published") {
+  /**
+   * action:
+   *  - "draft"   -> always force status to "draft" (Save Draft button)
+   *  - "primary" -> respect whatever the Status dropdown currently says
+   *                 (draft / published / scheduled). Falls back to
+   *                 "published" only if the dropdown was left on "draft"
+   *                 (so a brand-new post still publishes on first click).
+   */
+  async function handleSave(action: "draft" | "primary") {
     setErrors({});
+
+    const finalStatus: "draft" | "published" | "scheduled" =
+      action === "draft" ? "draft" : status === "draft" ? "published" : status;
+
+    if (finalStatus === "scheduled" && !scheduledAt) {
+      setErrors({
+        scheduledAt: "Pick a schedule date to schedule this post.",
+      });
+      setActiveTab("content");
+      return;
+    }
+
+    const nextPublishedAt =
+      finalStatus === "published"
+        ? publishedAt || new Date().toISOString()
+        : publishedAt;
+
     const payload = {
       title,
       slug,
@@ -236,9 +263,8 @@ export default function PostEditor({
       content,
       featuredImageAlt,
       featuredImage: featuredImagePreview,
-      status: saveStatus,
-      publishedAt:
-        saveStatus === "published" ? new Date().toISOString() : publishedAt,
+      status: finalStatus,
+      publishedAt: nextPublishedAt,
       scheduledAt,
       isFeatured,
       focusKeyphrase,
@@ -288,6 +314,9 @@ export default function PostEditor({
           faqItems.filter((f) => f.question && f.answer),
         );
       }
+      // Keep local state in sync with what was actually persisted.
+      setStatus(finalStatus);
+      setPublishedAt(nextPublishedAt);
     } finally {
       setSaving(false);
     }
@@ -297,17 +326,25 @@ export default function PostEditor({
     "w-full rounded-[10px] border border-border bg-white px-4 py-2.5 text-sm text-text outline-none focus:border-brand focus:ring-4 focus:ring-brand/10 transition";
   const labelClass = "block text-sm text-text-muted mb-1.5";
 
+  const primaryLabel =
+    status === "scheduled"
+      ? "Schedule"
+      : status === "draft"
+        ? postId
+          ? "Update"
+          : "Publish"
+        : postId
+          ? "Update"
+          : "Publish";
+
+  const primarySavingLabel =
+    status === "scheduled" ? "Scheduling…" : "Publishing…";
+
   return (
     <div className="min-h-screen bg-background">
       <div className="sticky top-0 z-10 border-b border-border bg-white/80 backdrop-blur-md">
         <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
-          {saving
-            ? postId
-              ? "Updating…"
-              : "Publishing…"
-            : postId
-              ? "Update"
-              : "Publish"}{" "}
+          {saving ? primarySavingLabel : primaryLabel}{" "}
           <div className="flex items-center gap-3">
             <button
               type="button"
@@ -326,11 +363,11 @@ export default function PostEditor({
             </button>
             <button
               type="button"
-              onClick={() => handleSave("published")}
+              onClick={() => handleSave("primary")}
               disabled={saving}
               className="rounded-[8px] bg-brand px-4 py-2 text-sm font-medium text-white hover:bg-brand-dark transition disabled:opacity-50"
             >
-              {saving ? "Publishing…" : "Publish"}
+              {saving ? primarySavingLabel : primaryLabel}
             </button>
           </div>
         </div>
@@ -465,6 +502,11 @@ export default function PostEditor({
                     onChange={(e) => setScheduledAt(e.target.value)}
                     className={inputClass}
                   />
+                  {errors.scheduledAt && (
+                    <p className="text-sm text-red-600 mt-1.5">
+                      {errors.scheduledAt}
+                    </p>
+                  )}
                 </div>
               )}
             </div>

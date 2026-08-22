@@ -9,25 +9,29 @@ const STATUS_COLORS = {
 };
 const CATEGORIES_COLOR = "#9333ea"; // sharp purple accent
 
-const RING_SIZE = 220;
-const RING_STROKE = 22;
-const RING_RADIUS = (RING_SIZE - RING_STROKE) / 2;
-const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
+const DISC_SIZE = 220;
 
-// Build SVG stroke segments (offset + length) for a multi-color ring
-function buildRingSegments(
+// Build conic-gradient stops for a solid pie disc using the same colors as the legend
+function buildConicGradient(
   segments: { label: string; count: number; color: string }[],
   total: number
 ) {
+  if (total === 0) return "#f1f1f4";
+
   let cumulative = 0;
-  return segments.map((seg) => {
-    const fraction = total > 0 ? seg.count / total : 0;
-    const length = fraction * RING_CIRCUMFERENCE;
-    const gap = RING_CIRCUMFERENCE - length;
-    const offset = -cumulative * RING_CIRCUMFERENCE;
+  const stops: string[] = [];
+
+  segments.forEach((seg) => {
+    const fraction = seg.count / total;
+    const start = cumulative * 360;
     cumulative += fraction;
-    return { ...seg, dashArray: `${length} ${gap}`, dashOffset: offset };
+    const end = cumulative * 360;
+    if (fraction > 0) {
+      stops.push(`${seg.color} ${start}deg ${end}deg`);
+    }
   });
+
+  return `conic-gradient(${stops.join(", ")})`;
 }
 
 export default async function AdminDashboardPage() {
@@ -43,7 +47,7 @@ export default async function AdminDashboardPage() {
     { label: "Scheduled", count: stats.scheduled, color: STATUS_COLORS.scheduled },
   ];
 
-  const ringSegments = buildRingSegments(statusSegments, stats.totalPosts);
+  const discBackground = buildConicGradient(statusSegments, stats.totalPosts);
 
   return (
     <div className="px-8 py-8">
@@ -54,41 +58,21 @@ export default async function AdminDashboardPage() {
         <h2 className="text-sm font-medium text-text mb-8">Content Overview</h2>
 
         <div className="flex flex-col lg:flex-row items-center gap-12">
-          {/* Ring */}
-          <div className="relative flex-shrink-0" style={{ width: RING_SIZE, height: RING_SIZE }}>
-            <svg
-              width={RING_SIZE}
-              height={RING_SIZE}
-              className="-rotate-90"
-              style={{ filter: "drop-shadow(0 4px 14px rgba(0,0,0,0.08))" }}
-            >
-              <circle
-                cx={RING_SIZE / 2}
-                cy={RING_SIZE / 2}
-                r={RING_RADIUS}
-                fill="none"
-                stroke="#f1f1f4"
-                strokeWidth={RING_STROKE}
-              />
-              {ringSegments.map((seg) => (
-                <circle
-                  key={seg.label}
-                  cx={RING_SIZE / 2}
-                  cy={RING_SIZE / 2}
-                  r={RING_RADIUS}
-                  fill="none"
-                  stroke={seg.color}
-                  strokeWidth={RING_STROKE}
-                  strokeDasharray={seg.dashArray}
-                  strokeDashoffset={seg.dashOffset}
-                  strokeLinecap="round"
-                />
-              ))}
-            </svg>
+          {/* Solid pie disc */}
+          <div className="relative flex-shrink-0" style={{ width: DISC_SIZE, height: DISC_SIZE }}>
+            <div
+              className="rounded-full"
+              style={{
+                width: DISC_SIZE,
+                height: DISC_SIZE,
+                background: discBackground,
+                filter: "drop-shadow(0 4px 14px rgba(0,0,0,0.12))",
+              }}
+            />
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="text-center">
-                <p className="text-4xl font-semibold text-text">{stats.totalPosts}</p>
-                <p className="text-xs text-text-muted mt-1">Total Posts</p>
+              <div className="text-center rounded-full bg-white/90 backdrop-blur-sm w-24 h-24 flex flex-col items-center justify-center shadow-sm">
+                <p className="text-3xl font-semibold text-text">{stats.totalPosts}</p>
+                <p className="text-[10px] text-text-muted mt-0.5">Total Posts</p>
               </div>
             </div>
           </div>
@@ -128,15 +112,15 @@ export default async function AdminDashboardPage() {
         {stats.categoryBreakdown.length === 0 ? (
           <p className="text-sm text-text-muted">No categorized posts yet.</p>
         ) : (
-          <div className="flex items-end gap-6 h-56 px-2">
+          <div className="flex items-end justify-center gap-2 h-56 px-2">
             {stats.categoryBreakdown.map((cat, i) => {
               const heightPercent = (cat.count / maxCategoryCount) * 100;
               const color = CATEGORY_COLORS[i % CATEGORY_COLORS.length];
               return (
-                <div key={cat.name} className="flex-1 flex flex-col items-center h-full">
+                <div key={cat.name} className="flex flex-col items-center h-full w-16">
                   <div className="flex-1 w-full flex items-end justify-center">
                     <div
-                      className="w-full max-w-[52px] rounded-t-[8px] relative group transition-all"
+                      className="w-full max-w-[40px] rounded-t-[8px] relative group transition-all"
                       style={{
                         height: `${heightPercent}%`,
                         backgroundColor: color,

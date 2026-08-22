@@ -2,6 +2,7 @@ import { getPostBySlug } from "@/app/admin/posts/actions";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
+import FaqAccordion from "@/components/blog/FaqAccordion";
 
 export async function generateMetadata({
   params,
@@ -174,19 +175,12 @@ export default async function BlogPostPage({
           </div>
         )}
 
-        {post.faqs.length > 0 && (
-          <div className="mt-14 pt-10 border-t border-border">
-            <h2 className="text-2xl font-semibold text-text mb-6">Frequently Asked Questions</h2>
-            <div className="space-y-3">
-              {post.faqs.map((faq) => (
-                <div key={faq.id} className="rounded-[14px] border border-border bg-surface p-5">
-                  <h3 className="text-base font-medium text-text mb-1.5">{faq.question}</h3>
-                  <p className="text-text-muted leading-relaxed">{faq.answer}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+       {post.faqs.length > 0 && (
+  <div className="mt-14 pt-10 border-t border-border">
+    <h2 className="text-2xl font-semibold text-text mb-6">Frequently Asked Questions</h2>
+    <FaqAccordion faqs={post.faqs} />
+  </div>
+)}
       </article>
     </div>
   );
