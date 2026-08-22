@@ -1,5 +1,5 @@
 "use server";
-import { eq, sql } from "drizzle-orm";
+import { eq, sql, inArray } from "drizzle-orm";
 import { db } from "@/lib/db";
 import {
   posts,
@@ -339,17 +339,31 @@ export async function getPublishedPosts() {
     .where(eq(posts.status, "published"))
     .orderBy(posts.createdAt);
 
-  // attach categories per post
-  const withCategories = await Promise.all(
-    publishedPosts.map(async (post) => {
-      const cats = await db
-        .select({ id: categories.id, name: categories.name })
-        .from(postCategories)
-        .innerJoin(categories, eq(postCategories.categoryId, categories.id))
-        .where(eq(postCategories.postId, post.id));
-      return { ...post, categories: cats };
-    }),
-  );
+  if (publishedPosts.length === 0) return [];
+
+  // Single query for all post-category links instead of one query per post.
+  const postIds = publishedPosts.map((p) => p.id);
+  const catLinks = await db
+    .select({
+      postId: postCategories.postId,
+      id: categories.id,
+      name: categories.name,
+    })
+    .from(postCategories)
+    .innerJoin(categories, eq(postCategories.categoryId, categories.id))
+    .where(inArray(postCategories.postId, postIds));
+
+  const catsByPostId = new Map<string, { id: string; name: string }[]>();
+  for (const link of catLinks) {
+    const list = catsByPostId.get(link.postId) ?? [];
+    list.push({ id: link.id, name: link.name });
+    catsByPostId.set(link.postId, list);
+  }
+
+  const withCategories = publishedPosts.map((post) => ({
+    ...post,
+    categories: catsByPostId.get(post.id) ?? [],
+  }));
 
   return withCategories.reverse(); // newest first
 }
@@ -359,7 +373,6 @@ export async function getDashboardStats() {
     .select({ id: posts.id, status: posts.status })
     .from(posts);
   const allUsers = await db.select({ id: users.id }).from(users);
-  const allCategories = await db.select().from(categories);
 
   const totalPosts = allPosts.length;
   const published = allPosts.filter((p) => p.status === "published").length;
@@ -367,15 +380,16 @@ export async function getDashboardStats() {
   const scheduled = allPosts.filter((p) => p.status === "scheduled").length;
   const totalUsers = allUsers.length;
 
-  const categoryBreakdown = await Promise.all(
-    allCategories.map(async (cat) => {
-      const count = await db
-        .select({ count: sql<number>`count(*)` })
-        .from(postCategories)
-        .where(eq(postCategories.categoryId, cat.id));
-      return { name: cat.name, count: Number(count[0]?.count || 0) };
-    }),
-  );
+  // Single grouped query instead of one COUNT(*) query per category.
+  const categoryBreakdown = await db
+    .select({
+      name: categories.name,
+      count: sql<number>`count(${postCategories.postId})`,
+    })
+    .from(categories)
+    .leftJoin(postCategories, eq(postCategories.categoryId, categories.id))
+    .groupBy(categories.id, categories.name)
+    .having(sql`count(${postCategories.postId}) > 0`);
 
   return {
     totalPosts,
@@ -383,6 +397,9 @@ export async function getDashboardStats() {
     drafts,
     scheduled,
     totalUsers,
-    categoryBreakdown: categoryBreakdown.filter((c) => c.count > 0),
+    categoryBreakdown: categoryBreakdown.map((c) => ({
+      name: c.name,
+      count: Number(c.count),
+    })),
   };
 }
