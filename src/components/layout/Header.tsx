@@ -14,7 +14,7 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border py-6 bg-white/80 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-border py-2 bg-white/80 backdrop-blur-md">
       <div className="max-w-6xl mx-auto px-6 h-16 grid grid-cols-2 md:grid-cols-3 items-center">
         {/* Left: brand */}
         <Link href="/" className="text-lg font-semibold text-text tracking-tight justify-self-start">
