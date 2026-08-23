@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import HomeHero from "@/components/Home/HomeHero";
 import BlogHighlights from "@/components/Home/Bloghighlights";
-
+import WhoWeAre from "@/components/Home/WhoWeAre";
+import Testimonials from "@/components/Home/Testimonials";
+import CtaSection from "@/components/Home/CTASection";
+import FaqSection from "@/components/Home/FAQSection";
 const SITE_URL = "https://kuwaitguides.vercel.app";
 
 export const metadata: Metadata = {
@@ -66,6 +69,10 @@ export default function HomePage() {
 
       <HomeHero />
       <BlogHighlights/>
+      <WhoWeAre />
+      <Testimonials/>
+      <CtaSection/>
+      <FaqSection/>
     </div>
   );
 }
