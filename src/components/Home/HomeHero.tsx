@@ -2,7 +2,10 @@ import Link from "next/link";
 
 export default function HomeHero() {
   return (
-    <section className="relative bg-white">
+    <section
+      className="relative bg-white bg-cover bg-center"
+      style={{ backgroundImage: "url('/images/blog-banner-image.png')" }}
+    >
       <div className="max-w-3xl mx-auto px-4 sm:px-6 pt-16 sm:pt-24 md:pt-28 pb-14 sm:pb-20 md:pb-24 flex flex-col items-center text-center">
         <h1 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-semibold text-blue-600 tracking-tight leading-[1.1] max-w-2xl">
           Your friend who already
