@@ -26,9 +26,12 @@ export default function Footer() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm text-text-muted hover:text-brand transition"
+              className="group relative inline-block text-sm text-text-muted hover:text-brand transition-colors py-1"
             >
               {link.label}
+              <span
+                className="pointer-events-none absolute left-0 -bottom-0.5 h-[2px] w-full origin-left scale-x-0 bg-blue-600 transition-transform duration-300 ease-out group-hover:scale-x-100"
+              />
             </Link>
           ))}
         </nav>
