@@ -7,11 +7,11 @@ const STATUS_COLORS = {
   drafts: "#d97706", // sharp amber
   scheduled: "#0284c7", // sharp sky
 };
-const CATEGORIES_COLOR = "#9333ea"; // sharp purple accent
 
 const DISC_SIZE = 220;
+const CATEGORY_DISC_SIZE = 200;
 
-// Build conic-gradient stops for a solid pie disc using the same colors as the legend
+// Build conic-gradient stops for a solid pie disc from proportional segments
 function buildConicGradient(
   segments: { label: string; count: number; color: string }[],
   total: number
@@ -37,9 +37,12 @@ function buildConicGradient(
 export default async function AdminDashboardPage() {
   const stats = await getDashboardStats();
 
+  // TODO: verify getDashboardStats() in ./posts/actions.ts computes
+  // `drafts` and `scheduled` from a real status check (not both falling
+  // back to the same condition as `published`). Log stats server-side
+  // to confirm the raw numbers coming out of the DB query.
+
   const totalCategorized = stats.categoryBreakdown.reduce((sum, c) => sum + c.count, 0);
-  const totalCategories = stats.categoryBreakdown.length;
-  const maxCategoryCount = Math.max(...stats.categoryBreakdown.map((c) => c.count), 1);
 
   const statusSegments = [
     { label: "Published", count: stats.published, color: STATUS_COLORS.published },
@@ -49,6 +52,19 @@ export default async function AdminDashboardPage() {
 
   const discBackground = buildConicGradient(statusSegments, stats.totalPosts);
 
+  // Category segments, colored & sized proportionally to post count
+  const categorySegments = stats.categoryBreakdown.map((cat, i) => ({
+    label: cat.name,
+    count: cat.count,
+    color: CATEGORY_COLORS[i % CATEGORY_COLORS.length],
+  }));
+  const categoryDiscBackground = buildConicGradient(categorySegments, totalCategorized);
+
+  // Split categories into left / right lists flanking the disc
+  const midpoint = Math.ceil(categorySegments.length / 2);
+  const leftCategories = categorySegments.slice(0, midpoint);
+  const rightCategories = categorySegments.slice(midpoint);
+
   return (
     <div className="px-8 py-8">
       <h1 className="text-2xl font-semibold text-text mb-8">Dashboard</h1>
@@ -57,7 +73,7 @@ export default async function AdminDashboardPage() {
       <div className="rounded-[20px] border border-border bg-gradient-to-br from-white to-[#f7f8fc] p-8 mb-10 shadow-sm">
         <h2 className="text-sm font-medium text-text mb-8">Content Overview</h2>
 
-        <div className="flex flex-col lg:flex-row items-center gap-12">
+        <div className="flex flex-col lg:flex-row items-center justify-center gap-12 max-w-2xl mx-auto">
           {/* Solid pie disc */}
           <div className="relative flex-shrink-0" style={{ width: DISC_SIZE, height: DISC_SIZE }}>
             <div
@@ -77,67 +93,79 @@ export default async function AdminDashboardPage() {
             </div>
           </div>
 
-          {/* Legend / stats — sharp solid color tiles */}
-          <div className="flex-1 w-full grid grid-cols-2 gap-4">
+          {/* Legend — column stack, status only (Categories tile removed) */}
+          <div className="w-full lg:w-80 flex flex-col gap-4">
             {statusSegments.map((seg) => (
               <div
                 key={seg.label}
-                className="rounded-[14px] p-4 flex items-center gap-3 shadow-sm"
+                className="rounded-[14px] px-6 py-4 flex items-center justify-between shadow-sm"
                 style={{ backgroundColor: seg.color }}
               >
-                <div>
-                  <p className="text-lg font-semibold text-white leading-none">{seg.count}</p>
-                  <p className="text-xs text-white/85 mt-1">{seg.label}</p>
-                </div>
+                <p className="text-sm text-white/85">{seg.label}</p>
+                <p className="text-xl font-semibold text-white leading-none">{seg.count}</p>
               </div>
             ))}
-
-            <div
-              className="rounded-[14px] p-4 flex items-center gap-3 shadow-sm"
-              style={{ backgroundColor: CATEGORIES_COLOR }}
-            >
-              <div>
-                <p className="text-lg font-semibold text-white leading-none">{totalCategories}</p>
-                <p className="text-xs text-white/85 mt-1">Categories</p>
-              </div>
-            </div>
           </div>
         </div>
       </div>
 
-      {/* Category breakdown — finance-style bar chart */}
+      {/* Category breakdown — disc with side legends */}
       <div className="rounded-[16px] border border-border bg-white p-6">
         <h2 className="text-sm font-medium text-text mb-8">Posts by Category</h2>
 
-        {stats.categoryBreakdown.length === 0 ? (
+        {categorySegments.length === 0 ? (
           <p className="text-sm text-text-muted">No categorized posts yet.</p>
         ) : (
-          <div className="flex items-end justify-center gap-2 h-56 px-2">
-            {stats.categoryBreakdown.map((cat, i) => {
-              const heightPercent = (cat.count / maxCategoryCount) * 100;
-              const color = CATEGORY_COLORS[i % CATEGORY_COLORS.length];
-              return (
-                <div key={cat.name} className="flex flex-col items-center h-full w-16">
-                  <div className="flex-1 w-full flex items-end justify-center">
-                    <div
-                      className="w-full max-w-[40px] rounded-t-[8px] relative group transition-all"
-                      style={{
-                        height: `${heightPercent}%`,
-                        backgroundColor: color,
-                        minHeight: "4px",
-                      }}
-                    >
-                      <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-semibold text-text whitespace-nowrap">
-                        {cat.count}
-                      </span>
-                    </div>
-                  </div>
-                  <p className="text-xs text-text-muted mt-3 text-center truncate w-full">
-                    {cat.name}
-                  </p>
+          <div className="flex flex-col lg:flex-row items-center justify-center gap-10 max-w-3xl mx-auto">
+            {/* Left legend */}
+            <div className="flex flex-col gap-3 w-full lg:w-56">
+              {leftCategories.map((cat) => (
+                <div key={cat.label} className="flex items-center gap-2">
+                  <span
+                    className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                    style={{ backgroundColor: cat.color }}
+                  />
+                  <p className="text-xs text-text truncate flex-1">{cat.label}</p>
+                  <p className="text-xs font-semibold text-text-muted">{cat.count}</p>
                 </div>
-              );
-            })}
+              ))}
+            </div>
+
+            {/* Category pie disc */}
+            <div
+              className="relative flex-shrink-0"
+              style={{ width: CATEGORY_DISC_SIZE, height: CATEGORY_DISC_SIZE }}
+            >
+              <div
+                className="rounded-full"
+                style={{
+                  width: CATEGORY_DISC_SIZE,
+                  height: CATEGORY_DISC_SIZE,
+                  background: categoryDiscBackground,
+                  filter: "drop-shadow(0 4px 14px rgba(0,0,0,0.12))",
+                }}
+              />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="text-center rounded-full bg-white/90 backdrop-blur-sm w-20 h-20 flex flex-col items-center justify-center shadow-sm">
+                  <p className="text-2xl font-semibold text-text">{categorySegments.length}</p>
+                  <p className="text-[10px] text-text-muted mt-0.5">Categories</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Right legend */}
+            <div className="flex flex-col gap-3 w-full lg:w-56">
+              {rightCategories.map((cat) => (
+                <div key={cat.label} className="flex items-center gap-2">
+                  <span
+                    className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                    style={{ backgroundColor: cat.color }}
+                  />
+                  <p className="text-xs text-text truncate flex-1">{cat.label}</p>
+                  <p className="text-xs font-semibold text-text-muted">{cat.count}</p>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>

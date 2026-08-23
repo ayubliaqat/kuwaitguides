@@ -2,25 +2,34 @@
 
 import { useState } from "react";
 import PageBanner from "@/components/layout/PageBanner";
+import { submitContactMessage } from "./actions";
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
   const [sending, setSending] = useState(false);
+  const [error, setError] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
 
   const inputClass =
     "w-full rounded-[10px] border border-border bg-white px-4 py-2.5 text-sm text-text outline-none focus:border-brand focus:ring-4 focus:ring-brand/10 transition";
+
   const labelClass = "block text-sm text-text-muted mb-1.5";
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setSending(true);
-    setTimeout(() => {
-      setSending(false);
+    setError(false);
+
+    try {
+      await submitContactMessage({ name, email, message });
       setSubmitted(true);
-    }, 800);
+    } catch {
+      setError(true);
+    } finally {
+      setSending(false);
+    }
   }
 
   return (
@@ -35,13 +44,27 @@ export default function ContactPage() {
         {submitted ? (
           <div className="rounded-[16px] border border-brand/20 bg-brand/5 p-10 text-center">
             <div className="w-12 h-12 rounded-full bg-brand/10 flex items-center justify-center mx-auto mb-4">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-brand">
-                <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                className="text-brand"
+              >
+                <path
+                  d="M20 6L9 17l-5-5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
             </div>
+
             <p className="text-text font-medium mb-1">Message sent</p>
+
             <p className="text-sm text-text-muted">
-              We&apos;ll get back to you soon.
+              We will get back to you soon.
             </p>
           </div>
         ) : (
@@ -50,6 +73,7 @@ export default function ContactPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
                   <label className={labelClass}>Name</label>
+
                   <input
                     type="text"
                     value={name}
@@ -59,8 +83,10 @@ export default function ContactPage() {
                     className={inputClass}
                   />
                 </div>
+
                 <div>
                   <label className={labelClass}>Email</label>
+
                   <input
                     type="email"
                     value={email}
@@ -71,8 +97,10 @@ export default function ContactPage() {
                   />
                 </div>
               </div>
+
               <div>
                 <label className={labelClass}>Message</label>
+
                 <textarea
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
@@ -82,29 +110,33 @@ export default function ContactPage() {
                   className={inputClass + " resize-none"}
                 />
               </div>
+
+              {error && (
+                <p className="text-sm text-red-600">
+                  Something went wrong. Please try again.
+                </p>
+              )}
+
               <button
                 type="submit"
                 disabled={sending}
                 className="w-full sm:w-auto rounded-[10px] bg-brand px-7 py-3 text-sm font-medium text-white hover:bg-brand-dark transition disabled:opacity-50"
               >
-                {sending ? "Sending…" : "Send Message"}
+                {sending ? "Sending..." : "Send Message"}
               </button>
             </form>
           </div>
         )}
 
-        {/* Alternative contact note */}
-        <div className="mt-8 text-center">
-          <p className="text-sm text-text-muted">
-            Prefer email? Reach us directly at{" "}
-            <a
-              href="mailto:hello@kuwaitguides.com"
-              className="text-brand hover:text-brand-dark transition font-medium"
-            >
-              hello@kuwaitguides.com
-            </a>
-          </p>
-        </div>
+        <p className="mt-6 text-center text-sm text-text-muted">
+          Prefer email? Reach us directly at{" "}
+          <a
+            href="mailto:hello@kuwaitguides.com"
+            className="text-brand hover:text-brand-dark transition font-medium"
+          >
+            hello@kuwaitguides.com
+          </a>
+        </p>
       </div>
     </div>
   );

@@ -114,3 +114,12 @@ export const relatedPosts = pgTable("related_posts", {
   postId: uuid("post_id").notNull().references(() => posts.id, { onDelete: "cascade" }),
   relatedPostId: uuid("related_post_id").notNull().references(() => posts.id, { onDelete: "cascade" }),
 });
+// Contact messages
+export const contactMessages = pgTable("contact_messages", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  name: text("name").notNull(),
+  email: text("email").notNull(),
+  message: text("message").notNull(),
+  read: boolean("read").notNull().default(false),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
