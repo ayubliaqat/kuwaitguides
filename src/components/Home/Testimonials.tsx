@@ -75,11 +75,11 @@ function getInitials(name: string) {
 }
 
 const AVATAR_COLORS = [
-  "#7c3aed",
+  "#2563eb",
   "#0284c7",
   "#059669",
   "#d97706",
-  "#dc2626",
+  "#7c3aed",
   "#0891b2",
 ];
 
@@ -138,13 +138,14 @@ export default function Testimonials() {
   }, []);
 
   return (
-    <section className="py-16 lg:py-20 bg-surface">
+    <section className="py-16 lg:py-20 bg-white dark:bg-zinc-950 border-y border-blue-200/60 dark:border-zinc-800">
       <div className="max-w-6xl mx-auto px-6">
         <div className="text-center mb-12">
-          <p className="text-xs font-medium text-brand uppercase tracking-wide mb-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800/60 text-blue-600 dark:text-blue-400 text-xs font-semibold uppercase tracking-wider shadow-sm mb-3">
+            <span className="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-400" />
             What People Say
-          </p>
-          <h2 className="text-3xl lg:text-4xl font-semibold text-text tracking-tight leading-tight">
+          </div>
+          <h2 className="text-3xl lg:text-4xl font-bold text-text dark:text-zinc-100 tracking-tight leading-tight">
             Trusted by people who&apos;ve actually used it
           </h2>
         </div>
@@ -155,7 +156,7 @@ export default function Testimonials() {
             onClick={handlePrev}
             disabled={activeIndex === 0}
             aria-label="Previous testimonial"
-            className="hidden sm:flex absolute -left-5 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white border border-border shadow-md items-center justify-center text-text hover:bg-brand hover:text-white hover:border-brand transition disabled:opacity-30 disabled:pointer-events-none"
+            className="hidden sm:flex absolute -left-5 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white dark:bg-zinc-900 border border-blue-200 dark:border-zinc-700 shadow-md items-center justify-center text-text dark:text-zinc-200 hover:bg-blue-600 hover:text-white hover:border-blue-600 dark:hover:bg-blue-600 transition disabled:opacity-30 disabled:pointer-events-none"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
@@ -167,7 +168,7 @@ export default function Testimonials() {
             onClick={handleNext}
             disabled={activeIndex === testimonials.length - 1}
             aria-label="Next testimonial"
-            className="hidden sm:flex absolute -right-5 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white border border-border shadow-md items-center justify-center text-text hover:bg-brand hover:text-white hover:border-brand transition disabled:opacity-30 disabled:pointer-events-none"
+            className="hidden sm:flex absolute -right-5 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white dark:bg-zinc-900 border border-blue-200 dark:border-zinc-700 shadow-md items-center justify-center text-text dark:text-zinc-200 hover:bg-blue-600 hover:text-white hover:border-blue-600 dark:hover:bg-blue-600 transition disabled:opacity-30 disabled:pointer-events-none"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
@@ -176,29 +177,29 @@ export default function Testimonials() {
 
           <div
             ref={scrollRef}
-            className="flex gap-5 overflow-x-auto snap-x snap-mandatory pb-2 -mx-6 px-6 scrollbar-hide"
+            className="flex gap-5 overflow-x-auto snap-x snap-mandatory py-4 pb-6 -mx-6 px-6 scrollbar-hide"
           >
             {testimonials.map((t, i) => (
               <div
                 key={t.name}
-                className="snap-start flex-shrink-0 w-[280px] sm:w-[320px] rounded-[16px] border border-border bg-white p-6 shadow-sm hover:shadow-md transition-shadow"
+                className="snap-start flex-shrink-0 w-[280px] sm:w-[320px] rounded-2xl border-2 border-blue-400 dark:border-blue-600 bg-white dark:bg-zinc-900 p-6 shadow-[0_10px_25px_rgba(37,99,235,0.15)] hover:shadow-[0_15px_35px_rgba(37,99,235,0.25)] dark:shadow-[0_10px_25px_rgba(0,0,0,0.5)] transition-all transform hover:-translate-y-1"
               >
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" className="text-brand/25 mb-3">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" className="text-blue-600/30 dark:text-blue-400/30 mb-3">
                   <path d="M7.17 6C4.87 8.13 3.5 11.19 3.5 14.5c0 3.31 2.34 5.5 5 5.5 2.21 0 4-1.79 4-4 0-1.94-1.37-3.56-3.19-3.92.36-2.24 2.06-4.16 4.19-4.87L12.5 5C10.5 5.3 8.7 5.5 7.17 6zm10 0c-2.3 2.13-3.67 5.19-3.67 8.5 0 3.31 2.34 5.5 5 5.5 2.21 0 4-1.79 4-4 0-1.94-1.37-3.56-3.19-3.92.36-2.24 2.06-4.16 4.19-4.87L22.5 5c-2 .3-3.8.5-5.33 1z" />
                 </svg>
-                <p className="text-text leading-relaxed mb-6 text-[15px]">
+                <p className="text-text dark:text-zinc-200 leading-relaxed mb-6 text-[15px]">
                   {t.quote}
                 </p>
                 <div className="flex items-center gap-3">
                   <div
-                    className="w-10 h-10 rounded-full flex items-center justify-center text-white text-xs font-semibold flex-shrink-0"
+                    className="w-10 h-10 rounded-full flex items-center justify-center text-white text-xs font-semibold flex-shrink-0 shadow-sm"
                     style={{ backgroundColor: AVATAR_COLORS[i % AVATAR_COLORS.length] }}
                   >
                     {getInitials(t.name)}
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-text">{t.name}</p>
-                    <p className="text-xs text-text-muted mt-0.5">{t.role}</p>
+                    <p className="text-sm font-semibold text-text dark:text-zinc-100">{t.name}</p>
+                    <p className="text-xs text-text-muted dark:text-zinc-400 mt-0.5">{t.role}</p>
                   </div>
                 </div>
               </div>
@@ -215,8 +216,8 @@ export default function Testimonials() {
               aria-label={`Go to testimonial ${i + 1}`}
               className={`rounded-full transition-all ${
                 activeIndex === i
-                  ? "w-6 h-2 bg-brand"
-                  : "w-2 h-2 bg-border hover:bg-brand/40"
+                  ? "w-6 h-2 bg-blue-600 dark:bg-blue-400"
+                  : "w-2 h-2 bg-blue-200 dark:bg-zinc-800 hover:bg-blue-400 dark:hover:bg-zinc-700"
               }`}
             />
           ))}

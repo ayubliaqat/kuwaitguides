@@ -14,11 +14,11 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border py-2 bg-white/80 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b-2 border-blue-200/80 dark:border-zinc-800 py-2 bg-white/90 dark:bg-zinc-950/90 backdrop-blur-md">
       <div className="max-w-6xl mx-auto px-6 h-16 grid grid-cols-2 md:grid-cols-3 items-center">
         {/* Left: brand */}
-        <Link href="/" className="text-lg font-semibold text-text tracking-tight justify-self-start">
-          Kuwait<span className="text-brand">Guides</span>
+        <Link href="/" className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 tracking-tight justify-self-start">
+          Kuwait<span className="text-blue-600 dark:text-blue-400">Guides</span>
         </Link>
 
         {/* Center: nav (desktop only) */}
@@ -27,10 +27,10 @@ export default function Header() {
             <Link
               key={link.href}
               href={link.href}
-              className="relative text-sm text-text-muted hover:text-brand transition py-1 group"
+              className="relative text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-blue-600 dark:hover:text-blue-400 transition py-1 group"
             >
               {link.label}
-              <span className="absolute left-0 -bottom-0.5 w-full h-[2px] bg-brand scale-x-0 group-hover:scale-x-100 origin-center transition-transform duration-300" />
+              <span className="absolute left-0 -bottom-0.5 w-full h-[2px] bg-blue-600 dark:bg-blue-400 scale-x-0 group-hover:scale-x-100 origin-center transition-transform duration-300" />
             </Link>
           ))}
         </nav>
@@ -39,7 +39,7 @@ export default function Header() {
         <div className="justify-self-end flex items-center gap-3">
           <Link
             href="/blog"
-            className="hidden md:inline-block rounded-[8px] bg-brand px-4 py-2 text-sm font-medium text-white hover:bg-brand-dark transition"
+            className="hidden md:inline-block rounded-[8px] bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 px-4 py-2 text-sm font-medium text-white transition shadow-sm"
           >
             Explore Guides
           </Link>
@@ -48,7 +48,7 @@ export default function Header() {
             type="button"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle menu"
-            className="md:hidden w-9 h-9 flex items-center justify-center text-text"
+            className="md:hidden w-9 h-9 flex items-center justify-center text-zinc-800 dark:text-zinc-200 rounded-lg hover:bg-blue-50 dark:hover:bg-zinc-900 transition"
           >
             {mobileOpen ? (
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -65,13 +65,13 @@ export default function Header() {
 
       {/* Mobile nav */}
       {mobileOpen && (
-        <nav className="md:hidden border-t border-border bg-white px-6 py-4 space-y-1">
+        <nav className="md:hidden border-t border-blue-100 dark:border-zinc-800 bg-white dark:bg-zinc-950 px-6 py-4 space-y-1 shadow-lg">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               onClick={() => setMobileOpen(false)}
-              className="block py-2.5 text-sm text-text hover:text-brand transition"
+              className="block py-2.5 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 transition"
             >
               {link.label}
             </Link>
@@ -79,7 +79,7 @@ export default function Header() {
           <Link
             href="/blog"
             onClick={() => setMobileOpen(false)}
-            className="block mt-3 rounded-[8px] bg-brand px-4 py-2.5 text-sm font-medium text-white text-center hover:bg-brand-dark transition"
+            className="block mt-3 rounded-[8px] bg-blue-600 dark:bg-blue-500 px-4 py-2.5 text-sm font-medium text-white text-center hover:bg-blue-700 dark:hover:bg-blue-600 transition shadow-sm"
           >
             Explore Guides
           </Link>

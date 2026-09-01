@@ -1,4 +1,4 @@
-import { getPostBySlug } from "@/app/admin/posts/actions";
+import { getPostBySlug, getRelatedPosts } from "@/app/admin/posts/actions";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
@@ -57,7 +57,6 @@ export default async function BlogPostPage({
     dateModified: post.updatedAt,
   };
 
-  // Guard against malformed custom schema JSON crashing the page for visitors
   let finalSchema = articleSchema;
   if (post.customSchema) {
     try {
@@ -89,6 +88,11 @@ export default async function BlogPostPage({
   const wordCount = post.content.replace(/<[^>]+>/g, " ").trim().split(/\s+/).filter(Boolean).length;
   const readingMinutes = Math.max(1, Math.round(wordCount / 200));
 
+  const relatedPosts = await getRelatedPosts(
+    post.id,
+    post.categories.map((cat) => cat.id),
+  );
+
   return (
     <div className="min-h-screen bg-background">
       <script
@@ -99,37 +103,29 @@ export default async function BlogPostPage({
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       )}
 
-      <article className="max-w-3xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
-        {/* Back to blog */}
-        <Link
-          href="/blog"
-          className="inline-flex items-center gap-1.5 text-sm text-text-muted hover:text-brand transition mb-6 sm:mb-8"
-        >
-          ← Back to blog
-        </Link>
+      <article className="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
+        {/* Breadcrumb */}
+        <nav aria-label="Breadcrumb" className="mb-6 sm:mb-8">
+          <ol className="flex items-center flex-wrap gap-1.5 text-sm">
+            <li>
+              <Link href="/" className="text-brand hover:underline">
+                Home
+              </Link>
+            </li>
+            <li className="text-text-muted">/</li>
+            <li>
+              <Link href="/blog" className="text-brand hover:underline">
+                Blog
+              </Link>
+            </li>
+          </ol>
+        </nav>
 
-        {/* Header block — consistent vertical rhythm */}
+        {/* Header block */}
         <header className="space-y-3 sm:space-y-4 mb-8 sm:mb-10">
-          {post.categories.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              {post.categories.map((cat) => (
-                <span
-                  key={cat.id}
-                  className="text-xs font-medium text-brand bg-brand/10 px-2.5 py-1 rounded-full"
-                >
-                  {cat.name}
-                </span>
-              ))}
-            </div>
-          )}
-
           <h1 className="text-[1.75rem] sm:text-3xl lg:text-4xl font-semibold text-text tracking-tight leading-tight">
             {post.title}
           </h1>
-
-          {post.excerpt && (
-            <p className="text-base sm:text-lg text-text-muted leading-relaxed">{post.excerpt}</p>
-          )}
 
           <div className="flex items-center gap-2 text-sm text-text-muted pt-1">
             <span>{publishedLabel}</span>
@@ -159,34 +155,54 @@ export default async function BlogPostPage({
             prose-p:leading-relaxed prose-p:my-4
             prose-ul:my-4 prose-ol:my-4 prose-li:my-1 prose-li:leading-relaxed
             prose-blockquote:my-5 prose-img:my-6 prose-img:rounded-[10px]
-            [&_table]:block [&_table]:w-max [&_table]:max-w-full [&_table]:overflow-x-auto
+            [&_table]:block [&_table]:w-max [&_table]:max-w-full [&_table]:overflow-x-auto md:[&_table]:table md:[&_table]:w-full md:[&_table]:overflow-visible
             [&_table]:my-6 [&_table]:border-collapse
             [&_table]:[-webkit-overflow-scrolling:touch]
-            [&_th]:border [&_th]:border-border [&_th]:bg-surface [&_th]:px-3 [&_th]:py-2 [&_th]:text-left [&_th]:font-semibold [&_th]:text-text [&_th]:whitespace-nowrap
-            [&_td]:border [&_td]:border-border [&_td]:px-3 [&_td]:py-2 [&_td]:text-text [&_td]:whitespace-nowrap
+            [&_th]:border [&_th]:border-border [&_th]:bg-surface [&_th]:px-3 [&_th]:py-2 [&_th]:text-left [&_th]:font-semibold [&_th]:text-text [&_th]:whitespace-nowrap md:[&_th]:whitespace-normal
+            [&_td]:border [&_td]:border-border [&_td]:px-3 [&_td]:py-2 [&_td]:text-text [&_td]:whitespace-nowrap md:[&_td]:whitespace-normal
             [&_tr]:border-b [&_tr]:border-border"
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
 
-        {post.tags.length > 0 && (
-          <div className="flex flex-wrap gap-2 mt-8 sm:mt-10 pt-6 border-t border-border">
-            {post.tags.map((tag) => (
-              <span
-                key={tag.id}
-                className="text-xs font-medium text-brand bg-brand/10 px-2.5 py-1 rounded-full"
-              >
-                #{tag.name}
-              </span>
-            ))}
+        {post.faqs.length > 0 && (
+          <div className="mt-10 sm:mt-14 pt-8 sm:pt-10 border-t border-border">
+            <h2 className="text-xl sm:text-2xl font-semibold text-blue-600 dark:text-blue-400 mb-5 sm:mb-6">
+              Frequently Asked Questions
+            </h2>
+            <div className="[&_div.faq-item]:bg-white [&_div.faq-item]:dark:bg-zinc-900/80 [&_div.faq-item]:shadow-[0_8px_20px_rgba(0,0,0,0.06)] [&_div.faq-item]:dark:shadow-[0_8px_20px_rgba(0,0,0,0.3)] [&_div.faq-item]:backdrop-blur-md [&_div.faq-item]:border [&_div.faq-item]:border-zinc-100 [&_div.faq-item]:dark:border-zinc-800 [&_div.faq-item]:rounded-xl [&_div.faq-item]:mb-3 [&_div.faq-item]:p-4 text-black dark:text-zinc-100">
+              <FaqAccordion faqs={post.faqs} />
+            </div>
           </div>
         )}
 
-        {post.faqs.length > 0 && (
+        {relatedPosts.length > 0 && (
           <div className="mt-10 sm:mt-14 pt-8 sm:pt-10 border-t border-border">
             <h2 className="text-xl sm:text-2xl font-semibold text-text mb-5 sm:mb-6">
-              Frequently Asked Questions
+              Related Posts
             </h2>
-            <FaqAccordion faqs={post.faqs} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+              {relatedPosts.map((related) => (
+                <Link
+                  key={related.id}
+                  href={`/blog/${related.slug}`}
+                  className="group block rounded-[14px] overflow-hidden border border-border hover:border-brand transition"
+                >
+                  {related.featuredImage && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={related.featuredImage}
+                      alt={related.featuredImageAlt || related.title}
+                      className="w-full aspect-video object-cover"
+                    />
+                  )}
+                  <div className="p-4">
+                    <h3 className="text-sm sm:text-base font-semibold text-text group-hover:text-brand transition leading-snug">
+                      {related.title}
+                    </h3>
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
         )}
       </article>

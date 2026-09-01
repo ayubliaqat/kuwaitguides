@@ -34,12 +34,12 @@ export default function FaqSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <section className="py-16 lg:py-20 bg-surface">
+    <section className="py-16 lg:py-20 bg-white dark:bg-zinc-950 border-y border-blue-200/60 dark:border-zinc-800">
       <div className="max-w-3xl mx-auto px-6">
         <div className="text-center mb-12">
-         <h2 className="text-3xl lg:text-4xl font-semibold text-brand tracking-tight leading-tight">
-  Frequently Asked questions
-</h2>
+          <h2 className="text-3xl lg:text-4xl font-semibold text-zinc-900 dark:text-zinc-100 tracking-tight leading-tight">
+            Frequently Asked Questions
+          </h2>
         </div>
 
         <div className="space-y-4">
@@ -48,7 +48,7 @@ export default function FaqSection() {
             return (
               <div
                 key={faq.question}
-                className="rounded-[14px] bg-white overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+                className="rounded-[14px] bg-white dark:bg-zinc-900 overflow-hidden border-2 border-blue-400 dark:border-blue-600 shadow-[0_8px_20px_rgba(37,99,235,0.1)] hover:shadow-[0_12px_28px_rgba(37,99,235,0.18)] dark:shadow-[0_8px_20px_rgba(0,0,0,0.4)] transition-all"
               >
                 <button
                   type="button"
@@ -56,7 +56,7 @@ export default function FaqSection() {
                   className="w-full flex items-center justify-between gap-4 p-5 text-left"
                   aria-expanded={isOpen}
                 >
-                  <h3 className="text-base font-medium text-text">
+                  <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
                     {faq.question}
                   </h3>
                   <svg
@@ -66,7 +66,7 @@ export default function FaqSection() {
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="2"
-                    className={`flex-shrink-0 text-text-muted transition-transform duration-300 ${
+                    className={`flex-shrink-0 text-blue-600 dark:text-blue-400 transition-transform duration-300 ${
                       isOpen ? "rotate-180" : ""
                     }`}
                   >
@@ -80,7 +80,7 @@ export default function FaqSection() {
                   }`}
                 >
                   <div className="overflow-hidden">
-                    <p className="text-text-muted leading-relaxed px-5 pb-5">
+                    <p className="text-zinc-600 dark:text-zinc-300 leading-relaxed px-5 pb-5 text-sm sm:text-base">
                       {faq.answer}
                     </p>
                   </div>

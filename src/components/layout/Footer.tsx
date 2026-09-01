@@ -11,12 +11,12 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-border bg-white">
+    <footer className="border-t-2 border-blue-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-950">
       <div className="max-w-6xl mx-auto px-6 py-10">
         {/* Brand */}
         <div className="text-center mb-6">
-          <Link href="/" className="text-lg font-semibold text-text tracking-tight">
-            Kuwait<span className="text-brand">Guides</span>
+          <Link href="/" className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 tracking-tight">
+            Kuwait<span className="text-blue-600 dark:text-blue-400">Guides</span>
           </Link>
         </div>
 
@@ -26,19 +26,19 @@ export default function Footer() {
             <Link
               key={link.href}
               href={link.href}
-              className="group relative inline-block text-sm text-text-muted hover:text-brand transition-colors py-1"
+              className="group relative inline-block text-sm text-zinc-600 dark:text-zinc-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors py-1 font-medium"
             >
               {link.label}
               <span
-                className="pointer-events-none absolute left-0 -bottom-0.5 h-[2px] w-full origin-left scale-x-0 bg-blue-600 transition-transform duration-300 ease-out group-hover:scale-x-100"
+                className="pointer-events-none absolute left-0 -bottom-0.5 h-[2px] w-full origin-left scale-x-0 bg-blue-600 dark:bg-blue-400 transition-transform duration-300 ease-out group-hover:scale-x-100"
               />
             </Link>
           ))}
         </nav>
 
         {/* Copyright */}
-        <div className="text-center pt-6 border-t border-border">
-          <p className="text-xs text-text-muted">
+        <div className="text-center pt-6 border-t border-blue-100 dark:border-zinc-800/80">
+          <p className="text-xs text-zinc-500 dark:text-zinc-400">
             © {year} KuwaitGuides. All rights reserved.
           </p>
         </div>

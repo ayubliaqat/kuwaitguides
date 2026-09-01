@@ -189,6 +189,7 @@ export async function getPostBySlug(slug: string) {
 
   return { ...post, faqs: postFaqs, categories: postCats, tags: postTagList };
 }
+
 export async function getPostById(id: string) {
   const post = await db.query.posts.findFirst({ where: eq(posts.id, id) });
   if (!post) return null;
@@ -215,6 +216,67 @@ export async function getPostById(id: string) {
     tagIds: tagLinks.map((t) => t.tagId),
     relatedPostIds: relatedLinks.map((r) => r.relatedPostId),
   };
+}
+
+/**
+ * Returns related posts for display on the public post page.
+ * Combines explicit related-post links set by the author with posts that
+ * share at least one category. Only published posts are returned.
+ * Pass `limit` only if you want to cap the count — omit it to return all matches.
+ */
+export async function getRelatedPosts(
+  postId: string,
+  categoryIds: string[],
+  limit?: number,
+) {
+  // 1. Explicit related-post links set by the author
+  const explicitLinks = await db
+    .select({ relatedPostId: relatedPosts.relatedPostId })
+    .from(relatedPosts)
+    .where(eq(relatedPosts.postId, postId));
+
+  let relatedIds: string[] = explicitLinks.map((r) => r.relatedPostId);
+
+  // 2. Add same-category posts too
+  if (categoryIds.length > 0) {
+    const catMatches = await db
+      .select({ postId: postCategories.postId })
+      .from(postCategories)
+      .where(inArray(postCategories.categoryId, categoryIds));
+
+    const candidateIds = Array.from(
+      new Set(catMatches.map((c) => c.postId)),
+    ).filter((id) => id !== postId && !relatedIds.includes(id));
+
+    relatedIds = [...relatedIds, ...candidateIds];
+  }
+
+  if (typeof limit === "number") {
+    relatedIds = relatedIds.slice(0, limit);
+  }
+
+  if (relatedIds.length === 0) return [];
+
+  const candidatePosts = await db
+    .select({
+      id: posts.id,
+      title: posts.title,
+      slug: posts.slug,
+      featuredImage: posts.featuredImage,
+      featuredImageAlt: posts.featuredImageAlt,
+      status: posts.status,
+    })
+    .from(posts)
+    .where(inArray(posts.id, relatedIds));
+
+  const published = candidatePosts.filter((p) => p.status === "published");
+
+  const priority = new Map(relatedIds.map((id, i) => [id, i]));
+  published.sort(
+    (a, b) => (priority.get(a.id) ?? 0) - (priority.get(b.id) ?? 0),
+  );
+
+  return published;
 }
 
 export async function updatePost(
