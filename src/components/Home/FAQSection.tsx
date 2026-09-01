@@ -48,7 +48,7 @@ export default function FaqSection() {
             return (
               <div
                 key={faq.question}
-                className="rounded-[14px] bg-white dark:bg-zinc-900 overflow-hidden border-2 border-blue-400 dark:border-blue-600 shadow-[0_8px_20px_rgba(37,99,235,0.1)] hover:shadow-[0_12px_28px_rgba(37,99,235,0.18)] dark:shadow-[0_8px_20px_rgba(0,0,0,0.4)] transition-all"
+                className="rounded-[14px] bg-white dark:bg-zinc-900 overflow-hidden border border-blue-400/60 dark:border-blue-700/80 shadow-[0_12px_35px_rgba(37,99,235,0.15)] hover:shadow-[0_15px_40px_rgba(37,99,235,0.22)] dark:shadow-[0_12px_35px_rgba(0,0,0,0.6)] transition-all"
               >
                 <button
                   type="button"

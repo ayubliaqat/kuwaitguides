@@ -1,5 +1,5 @@
 "use server";
-import { eq, sql, inArray } from "drizzle-orm";
+import { eq, sql, inArray, desc } from "drizzle-orm";
 import { db } from "@/lib/db";
 import {
   posts,
@@ -152,7 +152,7 @@ export async function getAllPosts() {
       createdAt: posts.createdAt,
     })
     .from(posts)
-    .orderBy(posts.createdAt);
+    .orderBy(desc(posts.createdAt));
 }
 
 export async function deletePost(id: string) {
@@ -173,19 +173,20 @@ export async function getPostBySlug(slug: string) {
 
   if (!post) return null;
 
-  const postFaqs = await db.select().from(faqs).where(eq(faqs.postId, post.id));
-
-  const postCats = await db
-    .select({ id: categories.id, name: categories.name, slug: categories.slug })
-    .from(postCategories)
-    .innerJoin(categories, eq(postCategories.categoryId, categories.id))
-    .where(eq(postCategories.postId, post.id));
-
-  const postTagList = await db
-    .select({ id: tags.id, name: tags.name, slug: tags.slug })
-    .from(postTags)
-    .innerJoin(tags, eq(postTags.tagId, tags.id))
-    .where(eq(postTags.postId, post.id));
+  // Run independent lookups concurrently instead of one-by-one.
+  const [postFaqs, postCats, postTagList] = await Promise.all([
+    db.select().from(faqs).where(eq(faqs.postId, post.id)),
+    db
+      .select({ id: categories.id, name: categories.name, slug: categories.slug })
+      .from(postCategories)
+      .innerJoin(categories, eq(postCategories.categoryId, categories.id))
+      .where(eq(postCategories.postId, post.id)),
+    db
+      .select({ id: tags.id, name: tags.name, slug: tags.slug })
+      .from(postTags)
+      .innerJoin(tags, eq(postTags.tagId, tags.id))
+      .where(eq(postTags.postId, post.id)),
+  ]);
 
   return { ...post, faqs: postFaqs, categories: postCats, tags: postTagList };
 }
@@ -194,20 +195,12 @@ export async function getPostById(id: string) {
   const post = await db.query.posts.findFirst({ where: eq(posts.id, id) });
   if (!post) return null;
 
-  const postFaqs = await db.select().from(faqs).where(eq(faqs.postId, id));
-
-  const catLinks = await db
-    .select()
-    .from(postCategories)
-    .where(eq(postCategories.postId, id));
-  const tagLinks = await db
-    .select()
-    .from(postTags)
-    .where(eq(postTags.postId, id));
-  const relatedLinks = await db
-    .select()
-    .from(relatedPosts)
-    .where(eq(relatedPosts.postId, id));
+  const [postFaqs, catLinks, tagLinks, relatedLinks] = await Promise.all([
+    db.select().from(faqs).where(eq(faqs.postId, id)),
+    db.select().from(postCategories).where(eq(postCategories.postId, id)),
+    db.select().from(postTags).where(eq(postTags.postId, id)),
+    db.select().from(relatedPosts).where(eq(relatedPosts.postId, id)),
+  ]);
 
   return {
     ...post,
@@ -229,27 +222,27 @@ export async function getRelatedPosts(
   categoryIds: string[],
   limit?: number,
 ) {
-  // 1. Explicit related-post links set by the author
-  const explicitLinks = await db
-    .select({ relatedPostId: relatedPosts.relatedPostId })
-    .from(relatedPosts)
-    .where(eq(relatedPosts.postId, postId));
+  // Run the two independent lookups concurrently.
+  const [explicitLinks, catMatches] = await Promise.all([
+    db
+      .select({ relatedPostId: relatedPosts.relatedPostId })
+      .from(relatedPosts)
+      .where(eq(relatedPosts.postId, postId)),
+    categoryIds.length > 0
+      ? db
+          .select({ postId: postCategories.postId })
+          .from(postCategories)
+          .where(inArray(postCategories.categoryId, categoryIds))
+      : Promise.resolve([]),
+  ]);
 
   let relatedIds: string[] = explicitLinks.map((r) => r.relatedPostId);
 
-  // 2. Add same-category posts too
-  if (categoryIds.length > 0) {
-    const catMatches = await db
-      .select({ postId: postCategories.postId })
-      .from(postCategories)
-      .where(inArray(postCategories.categoryId, categoryIds));
+  const candidateIds = Array.from(
+    new Set(catMatches.map((c) => c.postId)),
+  ).filter((id) => id !== postId && !relatedIds.includes(id));
 
-    const candidateIds = Array.from(
-      new Set(catMatches.map((c) => c.postId)),
-    ).filter((id) => id !== postId && !relatedIds.includes(id));
-
-    relatedIds = [...relatedIds, ...candidateIds];
-  }
+  relatedIds = [...relatedIds, ...candidateIds];
 
   if (typeof limit === "number") {
     relatedIds = relatedIds.slice(0, limit);
@@ -399,7 +392,7 @@ export async function getPublishedPosts() {
     })
     .from(posts)
     .where(eq(posts.status, "published"))
-    .orderBy(posts.createdAt);
+    .orderBy(desc(posts.createdAt)); // newest first, sorted in SQL — no JS .reverse() needed
 
   if (publishedPosts.length === 0) return [];
 
@@ -422,36 +415,32 @@ export async function getPublishedPosts() {
     catsByPostId.set(link.postId, list);
   }
 
-  const withCategories = publishedPosts.map((post) => ({
+  return publishedPosts.map((post) => ({
     ...post,
     categories: catsByPostId.get(post.id) ?? [],
   }));
-
-  return withCategories.reverse(); // newest first
 }
 
 export async function getDashboardStats() {
-  const allPosts = await db
-    .select({ id: posts.id, status: posts.status })
-    .from(posts);
-  const allUsers = await db.select({ id: users.id }).from(users);
+  const [allPosts, allUsers, categoryBreakdown] = await Promise.all([
+    db.select({ id: posts.id, status: posts.status }).from(posts),
+    db.select({ id: users.id }).from(users),
+    db
+      .select({
+        name: categories.name,
+        count: sql<number>`count(${postCategories.postId})`,
+      })
+      .from(categories)
+      .leftJoin(postCategories, eq(postCategories.categoryId, categories.id))
+      .groupBy(categories.id, categories.name)
+      .having(sql`count(${postCategories.postId}) > 0`),
+  ]);
 
   const totalPosts = allPosts.length;
   const published = allPosts.filter((p) => p.status === "published").length;
   const drafts = allPosts.filter((p) => p.status === "draft").length;
   const scheduled = allPosts.filter((p) => p.status === "scheduled").length;
   const totalUsers = allUsers.length;
-
-  // Single grouped query instead of one COUNT(*) query per category.
-  const categoryBreakdown = await db
-    .select({
-      name: categories.name,
-      count: sql<number>`count(${postCategories.postId})`,
-    })
-    .from(categories)
-    .leftJoin(postCategories, eq(postCategories.categoryId, categories.id))
-    .groupBy(categories.id, categories.name)
-    .having(sql`count(${postCategories.postId}) > 0`);
 
   return {
     totalPosts,

@@ -4,6 +4,10 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import FaqAccordion from "@/components/blog/FaqAccordion";
 
+// Cache each post page for 5 minutes. Edits made in the admin panel
+// will show up on the live site within that window.
+export const revalidate = 300;
+
 export async function generateMetadata({
   params,
 }: {

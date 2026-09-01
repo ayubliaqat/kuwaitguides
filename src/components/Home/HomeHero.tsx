@@ -7,7 +7,7 @@ export default function HomeHero() {
       style={{ backgroundImage: "url('/images/blog-banner-image.png')" }}
     >
       <div className="max-w-3xl mx-auto px-4 sm:px-6 pt-16 sm:pt-12 md:pt-16 pb-8 sm:pb-8 md:pb-12 flex flex-col items-center text-center">
-        <h1 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-bold text-blue-600 dark:text-blue-400 tracking-tight leading-[1.1] max-w-2xl">
+        <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold text-blue-600 dark:text-blue-400 tracking-tight leading-[1.1] max-w-2xl">
           Life, food, and hidden gems in Kuwait
         </h1>
 

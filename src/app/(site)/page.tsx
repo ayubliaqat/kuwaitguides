@@ -7,6 +7,8 @@ import CtaSection from "@/components/Home/CTASection";
 import FaqSection from "@/components/Home/FAQSection";
 import WhatYouWillLearn from "@/components/Home/WhatYouWillLearn";
 import HomeSearchBar from "@/components/Home/HomeSearchSection";
+import TrustSection from "@/components/Home/TrustSection";
+
 const SITE_URL = "https://kuwaitguides.vercel.app";
 
 export const metadata: Metadata = {
@@ -63,20 +65,21 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-zinc-950">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
       />
 
       <HomeHero />
+      <TrustSection/>
       <HomeSearchBar />
-      <BlogHighlights/>
+      <BlogHighlights />
       <WhoWeAre />
-      <WhatYouWillLearn/>
-      <Testimonials/>
-      <CtaSection/>
-      <FaqSection/>
+      <WhatYouWillLearn />
+      <Testimonials />
+      <CtaSection />
+      <FaqSection />
     </div>
   );
 }

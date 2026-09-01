@@ -1,6 +1,6 @@
 export default function WhoWeAre() {
   return (
-    <section className="py-8 lg:py-12 bg-gradient-to-b from-background via-surface/50 to-background">
+    <section className="py-8 lg:py-12 bg-gradient-to-b from-white via-blue-50/30 to-white dark:from-zinc-950 dark:via-zinc-900/40 dark:to-zinc-950">
       <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
         {/* Text side */}
         <div className="space-y-5">
@@ -11,10 +11,10 @@ export default function WhoWeAre() {
           
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight leading-[1.15]">
             <span className="text-blue-600 dark:text-blue-400">Kuwait, explained</span>{" "}
-            <span className="text-text dark:text-zinc-100">by people who actually live here</span>
+            <span className="text-zinc-900 dark:text-zinc-100">by people who actually live here</span>
           </h2>
           
-          <p className="text-text-muted dark:text-zinc-300 text-base leading-relaxed font-normal">
+          <p className="text-zinc-600 dark:text-zinc-300 text-base leading-relaxed font-normal">
             We started Kuwait Guides because most travel advice online felt outdated or written by someone who&apos;d never set foot here. So we built the guide we wished existed — honest, current, and written by locals who know which restaurant is actually worth the wait.
           </p>
 
@@ -28,7 +28,7 @@ export default function WhoWeAre() {
             ].map((item, index) => (
               <li key={index} className="flex items-center gap-3">
                 <span className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400 flex-shrink-0" />
-                <span className="text-base font-medium text-text dark:text-zinc-200">{item}</span>
+                <span className="text-base font-medium text-zinc-900 dark:text-zinc-200">{item}</span>
               </li>
             ))}
           </ul>

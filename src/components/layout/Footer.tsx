@@ -5,6 +5,8 @@ const FOOTER_LINKS = [
   { href: "/blog", label: "Blog" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
+  { href: "/privacy", label: "Privacy Policy" },
+  { href: "/terms", label: "Terms & Conditions" },
 ];
 
 export default function Footer() {
@@ -21,7 +23,7 @@ export default function Footer() {
         </div>
 
         {/* Centered nav */}
-        <nav className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 mb-6">
+        <nav aria-label="Footer navigation" className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 mb-6">
           {FOOTER_LINKS.map((link) => (
             <Link
               key={link.href}
@@ -38,7 +40,7 @@ export default function Footer() {
 
         {/* Copyright */}
         <div className="text-center pt-6 border-t border-blue-100 dark:border-zinc-800/80">
-          <p className="text-xs text-zinc-500 dark:text-zinc-400">
+          <p className="text-xs text-blue-500 dark:text-zinc-400">
             © {year} KuwaitGuides. All rights reserved.
           </p>
         </div>

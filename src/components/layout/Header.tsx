@@ -48,6 +48,8 @@ export default function Header() {
             type="button"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle menu"
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-menu"
             className="md:hidden w-9 h-9 flex items-center justify-center text-zinc-800 dark:text-zinc-200 rounded-lg hover:bg-blue-50 dark:hover:bg-zinc-900 transition"
           >
             {mobileOpen ? (
@@ -65,7 +67,7 @@ export default function Header() {
 
       {/* Mobile nav */}
       {mobileOpen && (
-        <nav className="md:hidden border-t border-blue-100 dark:border-zinc-800 bg-white dark:bg-zinc-950 px-6 py-4 space-y-1 shadow-lg">
+        <nav id="mobile-menu" className="md:hidden border-t border-blue-100 dark:border-zinc-800 bg-white dark:bg-zinc-950 px-6 py-4 space-y-1 shadow-lg">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}

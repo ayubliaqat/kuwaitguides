@@ -4,6 +4,10 @@ import BlogGrid from "./BlogGrid";
 
 const SITE_URL = "https://kuwaitguides.vercel.app";
 
+// Cache this page for 5 minutes — new posts show up within that window
+// instead of every visitor triggering a fresh Supabase query.
+export const revalidate = 300;
+
 export const metadata: Metadata = {
   title: "Kuwait Blog — Local Guides, Food, Beaches & Hidden Spots",
   description:

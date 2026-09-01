@@ -1,4 +1,4 @@
-import { pgTable, text, boolean, timestamp, integer, uuid, pgEnum } from "drizzle-orm/pg-core";
+import { pgTable, text, boolean, timestamp, integer, uuid, pgEnum, index } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
 // Enums (Postgres-native, replaces the { enum: [...] } pattern)
@@ -21,60 +21,68 @@ export const users = pgTable("users", {
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
-export const posts = pgTable("posts", {
-  id: uuid("id").primaryKey().defaultRandom(),
+export const posts = pgTable(
+  "posts",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
 
-  // Core
-  title: text("title").notNull(),
-  slug: text("slug").notNull().unique(),
-  content: text("content").notNull(), // Tiptap HTML output
-  excerpt: text("excerpt"),
+    // Core
+    title: text("title").notNull(),
+    slug: text("slug").notNull().unique(),
+    content: text("content").notNull(), // Tiptap HTML output
+    excerpt: text("excerpt"),
 
-  // Featured image
-  featuredImage: text("featured_image"), // Cloudinary URL
-  featuredImageAlt: text("featured_image_alt"),
+    // Featured image
+    featuredImage: text("featured_image"), // Cloudinary URL
+    featuredImageAlt: text("featured_image_alt"),
 
-  // Author
-  authorId: uuid("author_id")
-    .notNull()
-    .references(() => users.id),
+    // Author
+    authorId: uuid("author_id")
+      .notNull()
+      .references(() => users.id),
 
-  // Publish settings
-  status: postStatusEnum("status").notNull().default("draft"),
-  publishedAt: timestamp("published_at"),
-  scheduledAt: timestamp("scheduled_at"),
-  isFeatured: boolean("is_featured").notNull().default(false),
+    // Publish settings
+    status: postStatusEnum("status").notNull().default("draft"),
+    publishedAt: timestamp("published_at"),
+    scheduledAt: timestamp("scheduled_at"),
+    isFeatured: boolean("is_featured").notNull().default(false),
 
-  // SEO
-  focusKeyphrase: text("focus_keyphrase"),
-  seoTitle: text("seo_title"),
-  metaDescription: text("meta_description"),
-  seoSlug: text("seo_slug"),
-  canonicalUrl: text("canonical_url"),
-  robots: text("robots"), // e.g. "index,follow"
-  breadcrumbTitle: text("breadcrumb_title"),
+    // SEO
+    focusKeyphrase: text("focus_keyphrase"),
+    seoTitle: text("seo_title"),
+    metaDescription: text("meta_description"),
+    seoSlug: text("seo_slug"),
+    canonicalUrl: text("canonical_url"),
+    robots: text("robots"), // e.g. "index,follow"
+    breadcrumbTitle: text("breadcrumb_title"),
 
-  // Social — Open Graph
-  ogTitle: text("og_title"),
-  ogDescription: text("og_description"),
-  ogImage: text("og_image"),
+    // Social — Open Graph
+    ogTitle: text("og_title"),
+    ogDescription: text("og_description"),
+    ogImage: text("og_image"),
 
-  // Social — Twitter/X
-  twitterTitle: text("twitter_title"),
-  twitterDescription: text("twitter_description"),
-  twitterImage: text("twitter_image"),
+    // Social — Twitter/X
+    twitterTitle: text("twitter_title"),
+    twitterDescription: text("twitter_description"),
+    twitterImage: text("twitter_image"),
 
-  // Schema.org
-  schemaType: text("schema_type"), // e.g. "Article", "BlogPosting"
+    // Schema.org
+    schemaType: text("schema_type"), // e.g. "Article", "BlogPosting"
 
-  // Advanced
-  noindex: boolean("noindex").notNull().default(false),
-  nofollow: boolean("nofollow").notNull().default(false),
-  customSchema: text("custom_schema"), // raw JSON-LD override
+    // Advanced
+    noindex: boolean("noindex").notNull().default(false),
+    nofollow: boolean("nofollow").notNull().default(false),
+    customSchema: text("custom_schema"), // raw JSON-LD override
 
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-  updatedAt: timestamp("updated_at").notNull().defaultNow(),
-});
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  },
+  (table) => ({
+    statusIdx: index("posts_status_idx").on(table.status),
+    createdAtIdx: index("posts_created_at_idx").on(table.createdAt),
+    authorIdIdx: index("posts_author_id_idx").on(table.authorId),
+  }),
+);
 
 // Categories
 export const categories = pgTable("categories", {
@@ -83,10 +91,17 @@ export const categories = pgTable("categories", {
   slug: text("slug").notNull().unique(),
 });
 
-export const postCategories = pgTable("post_categories", {
-  postId: uuid("post_id").notNull().references(() => posts.id, { onDelete: "cascade" }),
-  categoryId: uuid("category_id").notNull().references(() => categories.id, { onDelete: "cascade" }),
-});
+export const postCategories = pgTable(
+  "post_categories",
+  {
+    postId: uuid("post_id").notNull().references(() => posts.id, { onDelete: "cascade" }),
+    categoryId: uuid("category_id").notNull().references(() => categories.id, { onDelete: "cascade" }),
+  },
+  (table) => ({
+    postIdIdx: index("post_categories_post_id_idx").on(table.postId),
+    categoryIdIdx: index("post_categories_category_id_idx").on(table.categoryId),
+  }),
+);
 
 // Tags
 export const tags = pgTable("tags", {
@@ -95,25 +110,46 @@ export const tags = pgTable("tags", {
   slug: text("slug").notNull().unique(),
 });
 
-export const postTags = pgTable("post_tags", {
-  postId: uuid("post_id").notNull().references(() => posts.id, { onDelete: "cascade" }),
-  tagId: uuid("tag_id").notNull().references(() => tags.id, { onDelete: "cascade" }),
-});
+export const postTags = pgTable(
+  "post_tags",
+  {
+    postId: uuid("post_id").notNull().references(() => posts.id, { onDelete: "cascade" }),
+    tagId: uuid("tag_id").notNull().references(() => tags.id, { onDelete: "cascade" }),
+  },
+  (table) => ({
+    postIdIdx: index("post_tags_post_id_idx").on(table.postId),
+    tagIdIdx: index("post_tags_tag_id_idx").on(table.tagId),
+  }),
+);
 
 // FAQs (belongs to one post)
-export const faqs = pgTable("faqs", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  postId: uuid("post_id").notNull().references(() => posts.id, { onDelete: "cascade" }),
-  question: text("question").notNull(),
-  answer: text("answer").notNull(),
-  order: integer("order").notNull().default(0),
-});
+export const faqs = pgTable(
+  "faqs",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    postId: uuid("post_id").notNull().references(() => posts.id, { onDelete: "cascade" }),
+    question: text("question").notNull(),
+    answer: text("answer").notNull(),
+    order: integer("order").notNull().default(0),
+  },
+  (table) => ({
+    postIdIdx: index("faqs_post_id_idx").on(table.postId),
+  }),
+);
 
 // Related posts (self-referencing many-to-many)
-export const relatedPosts = pgTable("related_posts", {
-  postId: uuid("post_id").notNull().references(() => posts.id, { onDelete: "cascade" }),
-  relatedPostId: uuid("related_post_id").notNull().references(() => posts.id, { onDelete: "cascade" }),
-});
+export const relatedPosts = pgTable(
+  "related_posts",
+  {
+    postId: uuid("post_id").notNull().references(() => posts.id, { onDelete: "cascade" }),
+    relatedPostId: uuid("related_post_id").notNull().references(() => posts.id, { onDelete: "cascade" }),
+  },
+  (table) => ({
+    postIdIdx: index("related_posts_post_id_idx").on(table.postId),
+    relatedPostIdIdx: index("related_posts_related_post_id_idx").on(table.relatedPostId),
+  }),
+);
+
 // Contact messages
 export const contactMessages = pgTable("contact_messages", {
   id: uuid("id").primaryKey().defaultRandom(),
