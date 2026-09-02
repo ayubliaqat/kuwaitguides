@@ -19,6 +19,7 @@ export default function AboutPurpose() {
               fill
               className="object-cover"
             />
+
             <div className="absolute inset-0 bg-gradient-to-t from-blue-950/40 via-transparent to-transparent" />
           </div>
 
@@ -26,9 +27,14 @@ export default function AboutPurpose() {
           <div className="absolute -inset-6 -z-10 bg-blue-500/25 blur-3xl rounded-full" />
 
           {/* Floating glass accent card */}
-          <div className="absolute -bottom-6 -right-4 sm:-right-6 w-36 rounded-2xl border border-blue-200 dark:border-blue-700 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md shadow-lg shadow-blue-500/20 p-4">
-            <p className="text-2xl font-extrabold text-blue-600 dark:text-blue-400">100%</p>
-            <p className="text-[11px] text-zinc-600 dark:text-zinc-300 font-medium">Locally written</p>
+          <div className="absolute -bottom-6 -right-4 sm:-right-6 w-36 rounded-2xl border border-blue-200 dark:border-blue-700 bg-white/90 dark:bg-blue-950/90 backdrop-blur-md shadow-lg shadow-blue-500/20 p-4">
+            <p className="text-2xl font-extrabold text-blue-600 dark:text-blue-400">
+              100%
+            </p>
+
+            <p className="text-[11px] text-blue-800 dark:text-blue-100 font-medium">
+              Locally written
+            </p>
           </div>
         </div>
 
@@ -37,12 +43,19 @@ export default function AboutPurpose() {
           <span className="inline-block text-[11px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 px-3 py-1 rounded-full border border-blue-200 dark:border-blue-800 mx-auto lg:mx-0">
             Our Purpose
           </span>
+
           <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight">
             Cutting through general{" "}
-            <span className="text-blue-600 dark:text-blue-400">tourism noise</span>
+            <span className="text-blue-600 dark:text-blue-400">
+              tourism noise
+            </span>
           </h2>
-          <p className="text-sm sm:text-base text-zinc-600 dark:text-zinc-300 leading-relaxed max-w-xl mx-auto lg:mx-0">
-            Finding reliable information about Kuwait shouldn&apos;t require digging through outdated blogs or sponsored ads. We built this platform on transparent, current, community-backed details from people who actually live here.
+
+          <p className="text-sm sm:text-base text-blue-800 dark:text-blue-100 leading-relaxed max-w-xl mx-auto lg:mx-0">
+            Finding reliable information about Kuwait shouldn&apos;t require
+            digging through outdated blogs or sponsored ads. We built this
+            platform on transparent, current, community-backed details from
+            people who actually live here.
           </p>
 
           <ul className="space-y-3 pt-2 max-w-xl mx-auto lg:mx-0">
@@ -63,7 +76,8 @@ export default function AboutPurpose() {
                     />
                   </svg>
                 </span>
-                <span className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed">
+
+                <span className="text-xs sm:text-sm text-blue-800 dark:text-blue-100 leading-relaxed">
                   {point}
                 </span>
               </li>

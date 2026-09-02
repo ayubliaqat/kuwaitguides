@@ -1,7 +1,8 @@
 const INCLUSIONS = [
   {
     title: "Neighborhood Spotlights",
-    description: "Detailed breakdowns of districts, walkability, parking, and vibes.",
+    description:
+      "Detailed breakdowns of districts, walkability, parking, and vibes.",
     icon: (
       <path
         strokeLinecap="round"
@@ -13,7 +14,8 @@ const INCLUSIONS = [
   },
   {
     title: "Authentic Dining Guides",
-    description: "Curated lists of street food, hidden cafés, and high-end dining.",
+    description:
+      "Curated lists of street food, hidden cafés, and high-end dining.",
     icon: (
       <path
         strokeLinecap="round"
@@ -25,7 +27,8 @@ const INCLUSIONS = [
   },
   {
     title: "Visa & Practical Steps",
-    description: "Clear instructions for legal documents, transport, and daily living.",
+    description:
+      "Clear instructions for legal documents, transport, and daily living.",
     icon: (
       <path
         strokeLinecap="round"
@@ -37,7 +40,8 @@ const INCLUSIONS = [
   },
   {
     title: "Seasonal Recommendations",
-    description: "What to explore during winter events, summer escapes, and holidays.",
+    description:
+      "What to explore during winter events, summer escapes, and holidays.",
     icon: (
       <path
         strokeLinecap="round"
@@ -57,30 +61,39 @@ export default function AboutInclusions() {
       <div className="absolute bottom-0 right-1/4 w-72 h-72 bg-blue-300/10 dark:bg-blue-400/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="relative space-y-10">
+        {/* Heading */}
         <div className="text-center max-w-xl mx-auto space-y-3">
           <span className="inline-block text-[11px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 px-3 py-1 rounded-full border border-blue-200 dark:border-blue-800">
             Coverage
           </span>
-          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-            What&apos;s <span className="text-blue-600 dark:text-blue-400">actually</span> included
+
+          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-blue-950 dark:text-white">
+            What&apos;s{" "}
+            <span className="text-blue-600 dark:text-blue-400">
+              actually
+            </span>{" "}
+            included
           </h2>
-          <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed">
+
+          <p className="text-xs sm:text-sm text-blue-800 dark:text-blue-100 leading-relaxed">
             Four ways every guide on this site earns its place.
           </p>
         </div>
 
+        {/* Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {INCLUSIONS.map((item, idx) => (
             <div
               key={item.title}
-              className="group relative rounded-2xl border-2 border-blue-400 dark:border-blue-600 bg-white dark:bg-zinc-900 p-6 shadow-md shadow-blue-500/5 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-blue-500/20 hover:border-blue-500 overflow-hidden"
+              className="group relative rounded-2xl border-2 border-blue-400 dark:border-blue-600 bg-white dark:bg-blue-950/40 p-6 shadow-md shadow-blue-500/5 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-blue-500/20 hover:border-blue-500 overflow-hidden"
             >
-              {/* Faint oversized number watermark */}
-              <span className="absolute -top-3 -right-1 text-6xl font-black text-blue-50 dark:text-blue-950/80 select-none pointer-events-none transition-colors duration-300 group-hover:text-blue-100 dark:group-hover:text-blue-900/60">
+              {/* Number watermark */}
+              <span className="absolute -top-3 -right-1 text-6xl font-black text-blue-50 dark:text-blue-900/50 select-none pointer-events-none transition-colors duration-300 group-hover:text-blue-100 dark:group-hover:text-blue-800/60">
                 0{idx + 1}
               </span>
 
               <div className="relative">
+                {/* Icon */}
                 <div className="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center mb-4 shadow-md shadow-blue-500/30 transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-6">
                   <svg
                     viewBox="0 0 24 24"
@@ -91,13 +104,17 @@ export default function AboutInclusions() {
                     {item.icon}
                   </svg>
                 </div>
-                <h3 className="text-base font-bold mb-2">{item.title}</h3>
-                <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed">
+
+                <h3 className="text-base font-bold mb-2 text-blue-950 dark:text-white">
+                  {item.title}
+                </h3>
+
+                <p className="text-xs sm:text-sm text-blue-800 dark:text-blue-100 leading-relaxed">
                   {item.description}
                 </p>
               </div>
 
-              {/* Bottom accent line that grows on hover */}
+              {/* Bottom accent */}
               <div className="absolute bottom-0 left-0 h-1 w-0 bg-blue-500 transition-all duration-300 group-hover:w-full rounded-full" />
             </div>
           ))}

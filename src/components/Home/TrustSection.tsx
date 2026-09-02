@@ -27,21 +27,21 @@ export default function StatsTrustSection() {
   ];
 
   return (
-    <section className="py-8 sm:py-10 bg-white dark:bg-zinc-950 border-b border-blue-100 dark:border-zinc-800">
+    <section className="py-8 sm:py-10 bg-white border-b border-blue-100">
       <div className="max-w-6xl mx-auto px-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {stats.map((item, index) => (
             <div
               key={index}
-              className="group relative rounded-2xl border border-blue-400/60 dark:border-blue-700/80 bg-white dark:bg-zinc-900 p-5 text-center transition-all duration-300 hover:-translate-y-1 hover:border-blue-500 shadow-[0_12px_35px_rgba(37,99,235,0.15)] dark:shadow-[0_12px_35px_rgba(0,0,0,0.6)] flex flex-col items-center justify-center min-h-[140px]"
+              className="group relative rounded-2xl border border-blue-400/60 bg-white p-5 text-center transition-all duration-300 hover:-translate-y-1 hover:border-blue-500 shadow-[0_12px_35px_rgba(37,99,235,0.15)] flex flex-col items-center justify-center min-h-[140px]"
             >
-              <div className="text-2xl sm:text-3xl font-black text-blue-600 dark:text-blue-400 tracking-tight">
+              <div className="text-2xl sm:text-3xl font-black text-blue-600 tracking-tight">
                 {item.metric}
               </div>
-              <h3 className="mt-2 text-base font-bold text-zinc-900 dark:text-zinc-100">
+              <h3 className="mt-2 text-base font-bold text-zinc-900">
                 {item.title}
               </h3>
-              <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400 font-medium">
+              <p className="mt-0.5 text-xs text-zinc-500 font-medium">
                 {item.description}
               </p>
             </div>

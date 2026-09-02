@@ -48,23 +48,25 @@ export default function BlogGrid({ posts = [] }: { posts?: Post[] }) {
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-blue-500 dark:text-blue-400 pointer-events-none"
+            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-blue-500 pointer-events-none"
           >
             <circle cx="11" cy="11" r="8" />
             <path d="m21 21-4.3-4.3" />
           </svg>
+
           <input
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search guides..."
-            className="w-full rounded-xl border-2 border-blue-400 dark:border-blue-600 bg-white dark:bg-zinc-900 pl-10 pr-9 py-2.5 text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-[0_4px_15px_rgba(37,99,235,0.08)] transition"
+            className="w-full rounded-xl border-2 border-blue-400 bg-white pl-10 pr-9 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-[0_4px_15px_rgba(37,99,235,0.08)] transition"
           />
+
           {query && (
             <button
               onClick={() => setQuery("")}
               aria-label="Clear search"
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 transition"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-700 transition"
             >
               <svg
                 width="14"
@@ -82,7 +84,7 @@ export default function BlogGrid({ posts = [] }: { posts?: Post[] }) {
         </div>
 
         {query && (
-          <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-2 px-1">
+          <p className="text-xs text-zinc-500 mt-2 px-1">
             {filteredPosts.length === 0
               ? `No results for "${query}"`
               : `${filteredPosts.length} result${filteredPosts.length === 1 ? "" : "s"} for "${query}"`}
@@ -92,7 +94,7 @@ export default function BlogGrid({ posts = [] }: { posts?: Post[] }) {
 
       {/* Grid */}
       {filteredPosts.length === 0 ? (
-        <p className="text-center text-zinc-500 dark:text-zinc-400 py-16 sm:py-20 text-sm sm:text-base">
+        <p className="text-center text-zinc-500 py-16 sm:py-20 text-sm sm:text-base">
           {query
             ? "Try a different word, like a neighborhood, cuisine, or vibe."
             : "No posts published yet — check back soon."}
@@ -102,9 +104,9 @@ export default function BlogGrid({ posts = [] }: { posts?: Post[] }) {
           {filteredPosts.map((post) => (
             <article
               key={post.id}
-              className="group rounded-2xl border-2 border-blue-400 dark:border-blue-600 bg-white dark:bg-zinc-900 overflow-hidden shadow-[0_10px_25px_rgba(37,99,235,0.12)] hover:shadow-[0_15px_35px_rgba(37,99,235,0.2)] dark:shadow-[0_10px_25px_rgba(0,0,0,0.4)] transition-all duration-300 transform hover:-translate-y-1 flex flex-col"
+              className="group rounded-2xl border-2 border-blue-400 bg-white overflow-hidden shadow-[0_10px_25px_rgba(37,99,235,0.12)] hover:shadow-[0_15px_35px_rgba(37,99,235,0.2)] transition-all duration-300 transform hover:-translate-y-1 flex flex-col"
             >
-              <div className="aspect-[4/3] bg-blue-50 dark:bg-zinc-800 overflow-hidden">
+              <div className="aspect-[4/3] bg-blue-50 overflow-hidden">
                 {post.featuredImage ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -114,7 +116,7 @@ export default function BlogGrid({ posts = [] }: { posts?: Post[] }) {
                     className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-blue-300 dark:text-zinc-600">
+                  <div className="w-full h-full flex items-center justify-center text-blue-300">
                     <svg
                       width="28"
                       height="28"
@@ -138,24 +140,24 @@ export default function BlogGrid({ posts = [] }: { posts?: Post[] }) {
 
               <div className="p-4 sm:p-5 flex flex-col flex-1">
                 {post.categories && post.categories.length > 0 && (
-                  <span className="inline-block self-start px-2.5 py-0.5 mb-2 text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 rounded-full border border-blue-200 dark:border-blue-800/60">
+                  <span className="inline-block self-start px-2.5 py-0.5 mb-2 text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-blue-600 bg-blue-50 rounded-full border border-blue-200">
                     {post.categories[0].name}
                   </span>
                 )}
 
-                <h2 className="text-sm sm:text-base font-semibold text-zinc-900 dark:text-zinc-100 leading-snug mb-2 line-clamp-2">
+                <h2 className="text-sm sm:text-base font-semibold text-zinc-900 leading-snug mb-2 line-clamp-2">
                   {post.title}
                 </h2>
 
                 {post.excerpt && (
-                  <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-300 line-clamp-2 mb-4 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-zinc-600 line-clamp-2 mb-4 leading-relaxed">
                     {post.excerpt}
                   </p>
                 )}
 
                 <Link
                   href={`/blog/${post.slug}`}
-                  className="mt-auto flex items-center justify-center text-xs sm:text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 transition rounded-xl px-3.5 sm:px-4 py-2.5 w-full shadow-sm"
+                  className="mt-auto flex items-center justify-center text-xs sm:text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 transition rounded-xl px-3.5 sm:px-4 py-2.5 w-full shadow-sm"
                 >
                   Read Blog &rarr;
                 </Link>

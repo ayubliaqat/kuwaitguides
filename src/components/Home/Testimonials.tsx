@@ -138,14 +138,14 @@ export default function Testimonials() {
   }, []);
 
   return (
-    <section className="py-16 lg:py-20 bg-white dark:bg-zinc-950 border-y border-blue-200/60 dark:border-zinc-800">
+    <section className="py-16 lg:py-20 bg-white border-y border-blue-200/60">
       <div className="max-w-6xl mx-auto px-6">
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800/60 text-blue-600 dark:text-blue-400 text-xs font-semibold uppercase tracking-wider shadow-sm mb-3">
-            <span className="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-400" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-600 text-xs font-semibold uppercase tracking-wider shadow-sm mb-3">
+            <span className="w-2 h-2 rounded-full bg-blue-600" />
             What People Say
           </div>
-          <h2 className="text-3xl lg:text-4xl font-bold text-text dark:text-zinc-100 tracking-tight leading-tight">
+          <h2 className="text-3xl lg:text-4xl font-bold text-text tracking-tight leading-tight">
             Trusted by people who&apos;ve actually used it
           </h2>
         </div>
@@ -156,7 +156,7 @@ export default function Testimonials() {
             onClick={handlePrev}
             disabled={activeIndex === 0}
             aria-label="Previous testimonial"
-            className="hidden sm:flex absolute -left-5 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white dark:bg-zinc-900 border border-blue-200 dark:border-zinc-700 shadow-md items-center justify-center text-text dark:text-zinc-200 hover:bg-blue-600 hover:text-white hover:border-blue-600 dark:hover:bg-blue-600 transition disabled:opacity-30 disabled:pointer-events-none"
+            className="hidden sm:flex absolute -left-5 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white border border-blue-200 shadow-md items-center justify-center text-text hover:bg-blue-600 hover:text-white hover:border-blue-600 transition disabled:opacity-30 disabled:pointer-events-none"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
@@ -168,7 +168,7 @@ export default function Testimonials() {
             onClick={handleNext}
             disabled={activeIndex === testimonials.length - 1}
             aria-label="Next testimonial"
-            className="hidden sm:flex absolute -right-5 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white dark:bg-zinc-900 border border-blue-200 dark:border-zinc-700 shadow-md items-center justify-center text-text dark:text-zinc-200 hover:bg-blue-600 hover:text-white hover:border-blue-600 dark:hover:bg-blue-600 transition disabled:opacity-30 disabled:pointer-events-none"
+            className="hidden sm:flex absolute -right-5 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white border border-blue-200 shadow-md items-center justify-center text-text hover:bg-blue-600 hover:text-white hover:border-blue-600 transition disabled:opacity-30 disabled:pointer-events-none"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
@@ -182,12 +182,12 @@ export default function Testimonials() {
             {testimonials.map((t, i) => (
               <div
                 key={t.name}
-                className="snap-start flex-shrink-0 w-[280px] sm:w-[320px] rounded-2xl border-2 border-blue-400 dark:border-blue-600 bg-white dark:bg-zinc-900 p-6 shadow-[0_10px_25px_rgba(37,99,235,0.15)] hover:shadow-[0_15px_35px_rgba(37,99,235,0.25)] dark:shadow-[0_10px_25px_rgba(0,0,0,0.5)] transition-all transform hover:-translate-y-1"
+                className="snap-start flex-shrink-0 w-[280px] sm:w-[320px] rounded-2xl border-2 border-blue-400 bg-white p-6 shadow-[0_10px_25px_rgba(37,99,235,0.15)] hover:shadow-[0_15px_35px_rgba(37,99,235,0.25)] transition-all transform hover:-translate-y-1"
               >
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" className="text-blue-600/30 dark:text-blue-400/30 mb-3">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" className="text-blue-600/30 mb-3">
                   <path d="M7.17 6C4.87 8.13 3.5 11.19 3.5 14.5c0 3.31 2.34 5.5 5 5.5 2.21 0 4-1.79 4-4 0-1.94-1.37-3.56-3.19-3.92.36-2.24 2.06-4.16 4.19-4.87L12.5 5C10.5 5.3 8.7 5.5 7.17 6zm10 0c-2.3 2.13-3.67 5.19-3.67 8.5 0 3.31 2.34 5.5 5 5.5 2.21 0 4-1.79 4-4 0-1.94-1.37-3.56-3.19-3.92.36-2.24 2.06-4.16 4.19-4.87L22.5 5c-2 .3-3.8.5-5.33 1z" />
                 </svg>
-                <p className="text-text dark:text-zinc-200 leading-relaxed mb-6 text-[15px]">
+                <p className="text-text leading-relaxed mb-6 text-[15px]">
                   {t.quote}
                 </p>
                 <div className="flex items-center gap-3">
@@ -198,8 +198,8 @@ export default function Testimonials() {
                     {getInitials(t.name)}
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-text dark:text-zinc-100">{t.name}</p>
-                    <p className="text-xs text-text-muted dark:text-zinc-400 mt-0.5">{t.role}</p>
+                    <p className="text-sm font-semibold text-text">{t.name}</p>
+                    <p className="text-xs text-text-muted mt-0.5">{t.role}</p>
                   </div>
                 </div>
               </div>
@@ -216,8 +216,8 @@ export default function Testimonials() {
               aria-label={`Go to testimonial ${i + 1}`}
               className={`rounded-full transition-all ${
                 activeIndex === i
-                  ? "w-6 h-2 bg-blue-600 dark:bg-blue-400"
-                  : "w-2 h-2 bg-blue-200 dark:bg-zinc-800 hover:bg-blue-400 dark:hover:bg-zinc-700"
+                  ? "w-6 h-2 bg-blue-600"
+                  : "w-2 h-2 bg-blue-200 hover:bg-blue-400"
               }`}
             />
           ))}

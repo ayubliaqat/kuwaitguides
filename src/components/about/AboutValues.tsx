@@ -3,7 +3,8 @@ import Link from "next/link";
 const VALUES = [
   {
     title: "Honesty",
-    description: "We call out spots that aren't worth your time, providing true unfiltered opinions.",
+    description:
+      "We call out spots that aren't worth your time, providing true unfiltered opinions.",
     icon: (
       <path
         strokeLinecap="round"
@@ -15,7 +16,8 @@ const VALUES = [
   },
   {
     title: "Local Insight",
-    description: "Written exclusively by long-term residents who genuinely know the hidden corners.",
+    description:
+      "Written exclusively by long-term residents who genuinely know the hidden corners.",
     icon: (
       <path
         strokeLinecap="round"
@@ -27,7 +29,8 @@ const VALUES = [
   },
   {
     title: "Verified Updates",
-    description: "Prices, menus, and operating hours are re-checked in person on a regular basis.",
+    description:
+      "Prices, menus, and operating hours are re-checked in person on a regular basis.",
     icon: (
       <path
         strokeLinecap="round"
@@ -42,17 +45,25 @@ const VALUES = [
 export default function AboutValues() {
   return (
     <section className="space-y-12">
-      {/* Top: Heading + Description, centered */}
+      {/* Top: Heading + Description */}
       <div className="max-w-2xl mx-auto text-center space-y-4">
         <span className="inline-block text-[11px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 px-3 py-1 rounded-full border border-blue-200 dark:border-blue-800">
           Our Ethos
         </span>
+
         <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-          Driven by <span className="text-blue-600 dark:text-blue-400">accuracy and trust</span>
+          Driven by{" "}
+          <span className="text-blue-600 dark:text-blue-400">
+            accuracy and trust
+          </span>
         </h2>
-        <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed">
-          When details shift, we update them immediately. No recycled brochures — just firsthand local insights. Here&apos;s how we maintain quality.
+
+        <p className="text-xs sm:text-sm text-blue-800 dark:text-blue-100 leading-relaxed">
+          When details shift, we update them immediately. No recycled
+          brochures — just firsthand local insights. Here&apos;s how we
+          maintain quality.
         </p>
+
         <div>
           <Link
             href="/blog"
@@ -63,12 +74,12 @@ export default function AboutValues() {
         </div>
       </div>
 
-      {/* Bottom: Cards in a single row */}
+      {/* Bottom: Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
         {VALUES.map((value) => (
           <div
             key={value.title}
-            className="rounded-2xl border-2 border-blue-400 dark:border-blue-600 bg-white dark:bg-zinc-900 p-6 shadow-lg shadow-blue-500/10 transition hover:border-blue-500 hover:shadow-xl hover:shadow-blue-500/20"
+            className="rounded-2xl border-2 border-blue-400 dark:border-blue-600 bg-white dark:bg-blue-950/40 p-6 shadow-lg shadow-blue-500/10 transition hover:border-blue-500 hover:shadow-xl hover:shadow-blue-500/20"
           >
             <div className="w-11 h-11 rounded-xl bg-blue-50 dark:bg-blue-950/80 border border-blue-200 dark:border-blue-800 flex items-center justify-center mb-4">
               <svg
@@ -80,8 +91,12 @@ export default function AboutValues() {
                 {value.icon}
               </svg>
             </div>
-            <h3 className="text-base font-bold mb-1">{value.title}</h3>
-            <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed">
+
+            <h3 className="text-base font-bold mb-1 text-blue-950 dark:text-white">
+              {value.title}
+            </h3>
+
+            <p className="text-xs sm:text-sm text-blue-800 dark:text-blue-100 leading-relaxed">
               {value.description}
             </p>
           </div>

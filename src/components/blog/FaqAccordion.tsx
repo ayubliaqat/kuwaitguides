@@ -25,11 +25,11 @@ export default function FaqAccordion({ faqs }: FaqAccordionProps) {
         return (
           <div
             key={index}
-            className="faq-item bg-white dark:bg-zinc-900/80 shadow-[0_8px_20px_rgba(0,0,0,0.06)] dark:shadow-[0_8px_20px_rgba(0,0,0,0.3)] backdrop-blur-md border border-zinc-100 dark:border-zinc-800 rounded-xl overflow-hidden transition-all duration-200"
+            className="faq-item bg-white shadow-[0_8px_20px_rgba(0,0,0,0.06)] backdrop-blur-md border border-zinc-100 rounded-xl overflow-hidden transition-all duration-200"
           >
             <button
               onClick={() => toggleFaq(index)}
-              className="w-full text-left px-5 py-4 flex items-center justify-between gap-4 font-semibold text-blue-600 dark:text-blue-400 focus:outline-none"
+              className="w-full text-left px-5 py-4 flex items-center justify-between gap-4 font-semibold text-blue-600 focus:outline-none"
               aria-expanded={isOpen}
             >
               <span>{faq.question}</span>
@@ -50,7 +50,7 @@ export default function FaqAccordion({ faqs }: FaqAccordionProps) {
               </svg>
             </button>
             {isOpen && (
-              <div className="px-5 pb-5 pt-1 text-black dark:text-zinc-100 text-sm sm:text-base leading-relaxed border-t border-zinc-100 dark:border-zinc-800/60">
+              <div className="px-5 pb-5 pt-1 text-black text-sm sm:text-base leading-relaxed border-t border-zinc-100">
                 {faq.answer}
               </div>
             )}

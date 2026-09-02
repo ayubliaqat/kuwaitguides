@@ -28,15 +28,20 @@ export async function generateMetadata({
     openGraph: {
       title: post.ogTitle || title,
       description: post.ogDescription || description,
-      images: post.ogImage || post.featuredImage ? [post.ogImage || post.featuredImage!] : undefined,
+      images:
+        post.ogImage || post.featuredImage
+          ? [post.ogImage || post.featuredImage!]
+          : undefined,
     },
     twitter: {
       card: "summary_large_image",
       title: post.twitterTitle || post.ogTitle || title,
-      description: post.twitterDescription || post.ogDescription || description,
-      images: post.twitterImage || post.ogImage || post.featuredImage
-        ? [post.twitterImage || post.ogImage || post.featuredImage!]
-        : undefined,
+      description:
+        post.twitterDescription || post.ogDescription || description,
+      images:
+        post.twitterImage || post.ogImage || post.featuredImage
+          ? [post.twitterImage || post.ogImage || post.featuredImage!]
+          : undefined,
     },
   };
 }
@@ -83,18 +88,25 @@ export default async function BlogPostPage({
         }
       : null;
 
-  const publishedLabel = new Date(post.publishedAt || post.createdAt).toLocaleDateString(undefined, {
+  const publishedLabel = new Date(
+    post.publishedAt || post.createdAt
+  ).toLocaleDateString(undefined, {
     month: "long",
     day: "numeric",
     year: "numeric",
   });
 
-  const wordCount = post.content.replace(/<[^>]+>/g, " ").trim().split(/\s+/).filter(Boolean).length;
+  const wordCount = post.content
+    .replace(/<[^>]+>/g, " ")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean).length;
+
   const readingMinutes = Math.max(1, Math.round(wordCount / 200));
 
   const relatedPosts = await getRelatedPosts(
     post.id,
-    post.categories.map((cat) => cat.id),
+    post.categories.map((cat) => cat.id)
   );
 
   return (
@@ -103,8 +115,14 @@ export default async function BlogPostPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(finalSchema) }}
       />
+
       {faqSchema && (
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(faqSchema),
+          }}
+        />
       )}
 
       <article className="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
@@ -170,10 +188,11 @@ export default async function BlogPostPage({
 
         {post.faqs.length > 0 && (
           <div className="mt-10 sm:mt-14 pt-8 sm:pt-10 border-t border-border">
-            <h2 className="text-xl sm:text-2xl font-semibold text-blue-600 dark:text-blue-400 mb-5 sm:mb-6">
+            <h2 className="text-xl sm:text-2xl font-semibold text-blue-600 mb-5 sm:mb-6">
               Frequently Asked Questions
             </h2>
-            <div className="[&_div.faq-item]:bg-white [&_div.faq-item]:dark:bg-zinc-900/80 [&_div.faq-item]:shadow-[0_8px_20px_rgba(0,0,0,0.06)] [&_div.faq-item]:dark:shadow-[0_8px_20px_rgba(0,0,0,0.3)] [&_div.faq-item]:backdrop-blur-md [&_div.faq-item]:border [&_div.faq-item]:border-zinc-100 [&_div.faq-item]:dark:border-zinc-800 [&_div.faq-item]:rounded-xl [&_div.faq-item]:mb-3 [&_div.faq-item]:p-4 text-black dark:text-zinc-100">
+
+            <div className="[&_div.faq-item]:bg-white [&_div.faq-item]:shadow-[0_8px_20px_rgba(0,0,0,0.06)] [&_div.faq-item]:backdrop-blur-md [&_div.faq-item]:border [&_div.faq-item]:border-zinc-100 [&_div.faq-item]:rounded-xl [&_div.faq-item]:mb-3 [&_div.faq-item]:p-4 text-black">
               <FaqAccordion faqs={post.faqs} />
             </div>
           </div>
@@ -184,6 +203,7 @@ export default async function BlogPostPage({
             <h2 className="text-xl sm:text-2xl font-semibold text-text mb-5 sm:mb-6">
               Related Posts
             </h2>
+
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
               {relatedPosts.map((related) => (
                 <Link
@@ -199,6 +219,7 @@ export default async function BlogPostPage({
                       className="w-full aspect-video object-cover"
                     />
                   )}
+
                   <div className="p-4">
                     <h3 className="text-sm sm:text-base font-semibold text-text group-hover:text-brand transition leading-snug">
                       {related.title}

@@ -8,13 +8,13 @@ export default async function BlogHighlights() {
   if (featured.length === 0) return null;
 
   return (
-    <section className="bg-white dark:bg-zinc-950 border-y border-blue-200 dark:border-zinc-800">
+    <section className="bg-white border-y border-blue-200">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-8 sm:pt-10 pb-10 sm:pb-14 md:pb-16">
         <div className="text-center mb-8 sm:mb-10 md:mb-12">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-blue-600 dark:text-blue-400 tracking-tight">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-blue-600 tracking-tight">
             Latest Insights & Stories
           </h2>
-          <p className="text-zinc-600 dark:text-zinc-400 mt-2 sm:mt-3 text-sm sm:text-base md:text-lg max-w-2xl mx-auto leading-relaxed font-normal">
+          <p className="text-zinc-600 mt-2 sm:mt-3 text-sm sm:text-base md:text-lg max-w-2xl mx-auto leading-relaxed font-normal">
             Explore our carefully curated collection of expert guides, industry deep-dives, innovative engineering practices, and fresh perspectives designed to keep you ahead of the curve.
           </p>
         </div>
@@ -23,9 +23,9 @@ export default async function BlogHighlights() {
           {featured.map((post) => (
             <article
               key={post.id}
-              className="group rounded-2xl border-[2.5px] border-blue-400 dark:border-blue-700 bg-white dark:bg-zinc-900/90 overflow-hidden shadow-[0_10px_30px_rgba(37,99,235,0.15)] dark:shadow-[0_10px_30px_rgba(37,99,235,0.35)] backdrop-blur-md hover:shadow-[0_16px_40px_rgba(37,99,235,0.25)] dark:hover:shadow-[0_16px_40px_rgba(37,99,235,0.45)] hover:border-blue-500 dark:hover:border-blue-500 hover:-translate-y-1.5 transition-all duration-300 flex flex-col"
+              className="group rounded-2xl border-[2.5px] border-blue-400 bg-white overflow-hidden shadow-[0_10px_30px_rgba(37,99,235,0.15)] backdrop-blur-md hover:shadow-[0_16px_40px_rgba(37,99,235,0.25)] hover:border-blue-500 hover:-translate-y-1.5 transition-all duration-300 flex flex-col"
             >
-              <div className="aspect-[4/3] bg-blue-50 dark:bg-zinc-800 overflow-hidden">
+              <div className="aspect-[4/3] bg-blue-50 overflow-hidden">
                 {post.featuredImage ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -35,7 +35,7 @@ export default async function BlogHighlights() {
                     className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-zinc-400 dark:text-zinc-600">
+                  <div className="w-full h-full flex items-center justify-center text-zinc-400">
                     <svg
                       width="28"
                       height="28"
@@ -58,17 +58,17 @@ export default async function BlogHighlights() {
 
               <div className="p-4 sm:p-5 flex flex-col flex-1">
                 {post.categories.length > 0 && (
-                  <p className="text-[10px] sm:text-[11px] font-medium text-blue-600 dark:text-blue-400 uppercase tracking-wide mb-1.5 sm:mb-2">
+                  <p className="text-[10px] sm:text-[11px] font-medium text-blue-600 uppercase tracking-wide mb-1.5 sm:mb-2">
                     {post.categories[0].name}
                   </p>
                 )}
 
-                <h3 className="text-sm sm:text-base font-semibold text-zinc-900 dark:text-zinc-100 leading-snug mb-2 line-clamp-2">
+                <h3 className="text-sm sm:text-base font-semibold text-zinc-900 leading-snug mb-2 line-clamp-2">
                   {post.title}
                 </h3>
 
                 {post.excerpt && (
-                  <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 line-clamp-2 mb-4 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-zinc-600 line-clamp-2 mb-4 leading-relaxed">
                     {post.excerpt}
                   </p>
                 )}
