@@ -125,24 +125,45 @@ export default async function BlogPostPage({
         />
       )}
 
-      <article className="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
-        {/* Breadcrumb */}
-        <nav aria-label="Breadcrumb" className="mb-6 sm:mb-8">
-          <ol className="flex items-center flex-wrap gap-1.5 text-sm">
-            <li>
-              <Link href="/" className="text-brand hover:underline">
-                Home
-              </Link>
-            </li>
-            <li className="text-text-muted">/</li>
-            <li>
-              <Link href="/blog" className="text-brand hover:underline">
-                Blog
-              </Link>
-            </li>
-          </ol>
-        </nav>
+      {/* =====================================================
+          COMPACT WAVY HERO — BREADCRUMB ONLY
+          ===================================================== */}
+      <section className="relative h-[120px] sm:h-[140px] md:h-[150px] overflow-hidden bg-brand">
+        {/* Subtle decorative circles, matching the listing page hero */}
+        <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full border border-white/[0.10]" />
+        <div className="pointer-events-none absolute -bottom-24 -left-16 h-56 w-56 rounded-full border border-white/[0.08]" />
 
+        <div className="relative z-10 mx-auto flex h-full max-w-5xl items-center justify-center px-4 sm:px-6">
+          <nav aria-label="Breadcrumb">
+            <ol className="flex items-center flex-wrap justify-center gap-1.5 text-sm sm:text-base font-bold">
+              <li>
+                <Link href="/" className="text-white hover:text-white/80 transition">
+                  Home
+                </Link>
+              </li>
+              <li className="text-white/70">/</li>
+              <li className="text-white">Blog</li>
+            </ol>
+          </nav>
+        </div>
+
+        {/* Wave */}
+        <div className="absolute bottom-[-1px] left-0 w-full overflow-hidden leading-[0]">
+          <svg
+            className="relative block h-[32px] w-full sm:h-[38px] md:h-[42px]"
+            viewBox="0 0 1200 120"
+            preserveAspectRatio="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0,80 C180,135 330,10 520,55 C700,100 820,135 1000,65 C1080,35 1140,35 1200,55 L1200,120 L0,120 Z"
+              fill="white"
+            />
+          </svg>
+        </div>
+      </section>
+
+      <article className="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
         {/* Header block */}
         <header className="space-y-3 sm:space-y-4 mb-8 sm:mb-10">
           <h1 className="text-[1.75rem] sm:text-3xl lg:text-4xl font-semibold text-text tracking-tight leading-tight">
@@ -192,9 +213,7 @@ export default async function BlogPostPage({
               Frequently Asked Questions
             </h2>
 
-            <div className="[&_div.faq-item]:bg-white [&_div.faq-item]:shadow-[0_8px_20px_rgba(0,0,0,0.06)] [&_div.faq-item]:backdrop-blur-md [&_div.faq-item]:border [&_div.faq-item]:border-zinc-100 [&_div.faq-item]:rounded-xl [&_div.faq-item]:mb-3 [&_div.faq-item]:p-4 text-black">
-              <FaqAccordion faqs={post.faqs} />
-            </div>
+            <FaqAccordion faqs={post.faqs} />
           </div>
         )}
 

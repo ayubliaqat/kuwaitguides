@@ -130,7 +130,6 @@ export default function ContactPage() {
             </form>
           </div>
         )}
-
       </div>
     </div>
   );

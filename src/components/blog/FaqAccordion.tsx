@@ -2,58 +2,59 @@
 
 import { useState } from "react";
 
-interface FaqItem {
+type Faq = {
   question: string;
   answer: string;
-}
+};
 
-interface FaqAccordionProps {
-  faqs: FaqItem[];
-}
-
-export default function FaqAccordion({ faqs }: FaqAccordionProps) {
+export default function FaqAccordion({ faqs }: { faqs: Faq[] }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
-
-  const toggleFaq = (index: number) => {
-    setOpenIndex(openIndex === index ? null : index);
-  };
 
   return (
     <div className="space-y-4">
-      {faqs.map((faq, index) => {
-        const isOpen = openIndex === index;
+      {faqs.map((faq, i) => {
+        const isOpen = openIndex === i;
         return (
           <div
-            key={index}
-            className="faq-item bg-white shadow-[0_8px_20px_rgba(0,0,0,0.06)] backdrop-blur-md border border-zinc-100 rounded-xl overflow-hidden transition-all duration-200"
+            key={faq.question}
+            className="rounded-[14px] overflow-hidden shadow-[0_12px_35px_rgba(0,0,0,0.08)] transition-all"
           >
             <button
-              onClick={() => toggleFaq(index)}
-              className="w-full text-left px-5 py-4 flex items-center justify-between gap-4 font-semibold text-blue-600 focus:outline-none"
+              type="button"
+              onClick={() => setOpenIndex(isOpen ? null : i)}
+              className="w-full flex items-center justify-between gap-4 p-5 text-left transition-colors"
+              style={{ backgroundColor: "#2563eb" }}
               aria-expanded={isOpen}
             >
-              <span>{faq.question}</span>
+              <span className="text-base font-semibold text-white">
+                {faq.question}
+              </span>
               <svg
-                className={`w-5 h-5 text-blue-500 shrink-0 transition-transform duration-200 ${
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                className={`flex-shrink-0 transition-transform duration-300 text-white ${
                   isOpen ? "rotate-180" : ""
                 }`}
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 9l-7 7-7-7"
-                />
+                <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </button>
-            {isOpen && (
-              <div className="px-5 pb-5 pt-1 text-black text-sm sm:text-base leading-relaxed border-t border-zinc-100">
-                {faq.answer}
+
+            <div
+              className={`grid transition-all duration-300 ease-out bg-white ${
+                isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+              }`}
+            >
+              <div className="overflow-hidden">
+                <p className="text-zinc-600 leading-relaxed p-5 text-sm sm:text-base">
+                  {faq.answer}
+                </p>
               </div>
-            )}
+            </div>
           </div>
         );
       })}

@@ -8,6 +8,8 @@ import FaqSection from "@/components/Home/FAQSection";
 import WhatYouWillLearn from "@/components/Home/WhatYouWillLearn";
 import HomeSearchBar from "@/components/Home/HomeSearchSection";
 import TrustSection from "@/components/Home/TrustSection";
+import { db } from "@/lib/db";
+import { categories } from "@/lib/db/schema";
 
 const SITE_URL = "https://kuwaitguides.vercel.app";
 
@@ -54,7 +56,10 @@ export const metadata: Metadata = {
   },
 };
 
-export default function HomePage() {
+export default async function HomePage() {
+  const categoryRows = await db.select().from(categories);
+  const categoryNames = categoryRows.map((c) => c.name);
+
   const websiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -72,8 +77,8 @@ export default function HomePage() {
       />
 
       <HomeHero />
-      <TrustSection/>
-      <HomeSearchBar />
+      <TrustSection />
+      <HomeSearchBar categories={categoryNames} />
       <BlogHighlights />
       <WhoWeAre />
       <WhatYouWillLearn />

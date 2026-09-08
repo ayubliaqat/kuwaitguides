@@ -34,7 +34,7 @@ export default function FaqSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <section className="py-16 lg:py-20 bg-white border-y border-blue-200/60">
+    <section className="py-16 lg:py-20 bg-white">
       <div className="max-w-3xl mx-auto px-6">
         <div className="text-center mb-12">
           <h2 className="text-3xl lg:text-4xl font-semibold text-zinc-900 tracking-tight leading-tight">
@@ -48,17 +48,18 @@ export default function FaqSection() {
             return (
               <div
                 key={faq.question}
-                className="rounded-[14px] bg-white overflow-hidden border border-blue-400/60 shadow-[0_12px_35px_rgba(37,99,235,0.15)] hover:shadow-[0_15px_40px_rgba(37,99,235,0.22)] transition-all"
+                className="rounded-[14px] overflow-hidden shadow-[0_12px_35px_rgba(0,0,0,0.08)] transition-all"
               >
                 <button
                   type="button"
                   onClick={() => setOpenIndex(isOpen ? null : i)}
-                  className="w-full flex items-center justify-between gap-4 p-5 text-left"
+                  className="w-full flex items-center justify-between gap-4 p-5 text-left transition-colors"
+                  style={{ backgroundColor: "#2563eb" }}
                   aria-expanded={isOpen}
                 >
-                  <h3 className="text-base font-semibold text-zinc-900">
+                  <span className="text-base font-semibold text-white">
                     {faq.question}
-                  </h3>
+                  </span>
                   <svg
                     width="18"
                     height="18"
@@ -66,7 +67,7 @@ export default function FaqSection() {
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="2"
-                    className={`flex-shrink-0 text-blue-600 transition-transform duration-300 ${
+                    className={`flex-shrink-0 transition-transform duration-300 text-white ${
                       isOpen ? "rotate-180" : ""
                     }`}
                   >
@@ -79,14 +80,14 @@ export default function FaqSection() {
                 </button>
 
                 <div
-                  className={`grid transition-all duration-300 ease-out ${
+                  className={`grid transition-all duration-300 ease-out bg-white ${
                     isOpen
                       ? "grid-rows-[1fr] opacity-100"
                       : "grid-rows-[0fr] opacity-0"
                   }`}
                 >
                   <div className="overflow-hidden">
-                    <p className="text-zinc-600 leading-relaxed px-5 pb-5 text-sm sm:text-base">
+                    <p className="text-zinc-600 leading-relaxed p-5 text-sm sm:text-base">
                       {faq.answer}
                     </p>
                   </div>
