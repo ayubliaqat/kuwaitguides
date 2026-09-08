@@ -6,8 +6,19 @@ export default function HomeHero() {
       className="relative bg-[#FFFFFF] bg-cover bg-center border-y border-[#D2D2D7]"
       style={{ backgroundImage: "url('/images/contact-image.png')" }}
     >
-      {/* Stronger scrim on left where text sits, fading out before it reaches the towers */}
-      <div className="absolute inset-0 bg-gradient-to-r from-white/85 via-white/40 to-transparent pointer-events-none" />
+      {/* Blurred white panel behind the text, fading out toward the middle */}
+      <div
+        className="absolute inset-y-0 left-0 w-full sm:w-3/5 backdrop-blur-md bg-gradient-to-r from-white/85 via-white/60 to-white/0 pointer-events-none"
+        style={{
+          WebkitMaskImage:
+            "linear-gradient(to right, black 0%, black 60%, transparent 100%)",
+          maskImage:
+            "linear-gradient(to right, black 0%, black 60%, transparent 100%)",
+        }}
+      />
+
+      {/* Blue theme tint washing over the right side, over the towers */}
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-[#0071E3]/30 pointer-events-none" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-xl px-4 sm:px-6 pt-16 sm:pt-12 md:pt-16 pb-8 sm:pb-8 md:pb-12 flex flex-col items-start text-left">
