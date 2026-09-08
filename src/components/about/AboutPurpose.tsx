@@ -14,7 +14,7 @@ export default function AboutPurpose() {
         <div className="relative">
           <div className="relative rounded-3xl overflow-hidden border-2 border-blue-400 dark:border-blue-600 shadow-2xl shadow-blue-500/40 dark:shadow-blue-500/20 aspect-[4/3]">
             <Image
-              src="/images/about-purpose.jpg"
+              src="/images/about-explore.jpg"
               alt="Kuwait city street view"
               fill
               className="object-cover"

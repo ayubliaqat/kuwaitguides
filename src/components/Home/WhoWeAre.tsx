@@ -40,7 +40,7 @@ export default function WhoWeAre() {
           <div className="relative rounded-3xl overflow-hidden aspect-[4/3] border border-blue-300/70 shadow-[0_8px_25px_rgba(37,99,235,0.12)] bg-white">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/images/whoarewe.avif"
+              src="/images/about-explain-image.jpg"
               alt="Kuwait City skyline"
               className="w-full h-full object-cover transform hover:scale-105 transition duration-700 ease-out"
             />
