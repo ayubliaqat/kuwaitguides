@@ -10,6 +10,7 @@ import HomeSearchBar from "@/components/Home/HomeSearchSection";
 import TrustSection from "@/components/Home/TrustSection";
 import { db } from "@/lib/db";
 import { categories } from "@/lib/db/schema";
+import LongGuideSection from "@/components/Home/Longguidesection";
 
 const SITE_URL = "https://kuwaitguides.vercel.app";
 
@@ -82,6 +83,8 @@ export default async function HomePage() {
       <BlogHighlights />
       <WhoWeAre />
       <WhatYouWillLearn />
+      <LongGuideSection />
+
       <Testimonials />
       <CtaSection />
       <FaqSection />

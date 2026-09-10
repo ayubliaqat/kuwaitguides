@@ -1,8 +1,8 @@
-
 "use client";
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
@@ -20,9 +20,19 @@ export default function Header() {
         {/* Left: brand */}
         <Link
           href="/"
-          className="text-lg font-semibold text-[#1D1D1F] tracking-tight justify-self-start"
+          className="flex items-center gap-2 justify-self-start"
         >
-          Kuwait<span className="text-[#0071E3]">Guides</span>
+          <Image
+            src="/images/logo_blue.png"
+            alt="Kuwait Guides logo"
+            width={32}
+            height={32}
+            className="h-8 w-8 object-contain"
+            priority
+          />
+          <span className="text-lg font-semibold text-[#1D1D1F] tracking-tight">
+            Kuwait<span className="text-[#0071E3]">Guides</span>
+          </span>
         </Link>
 
         {/* Center: nav (desktop only) */}
